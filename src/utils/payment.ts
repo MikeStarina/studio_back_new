@@ -1,4 +1,7 @@
-import { PAYMENT_AUTH } from "../app";
+import dotenv from 'dotenv';
+
+const ENV = dotenv.config();
+export const PAYMENT_AUTH = ENV.parsed!.PAYMENT_AUTH.toString();
 
 
 export const paymentRequest = async (paymentData: any) => {

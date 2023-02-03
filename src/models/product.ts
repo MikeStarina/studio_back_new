@@ -19,7 +19,7 @@ interface IProduct {
     editor_back_view: String;
     editor_lsleeve_view: String;
     editor_rsleeve_view: String;
-    sizes: Array<{name: String, amount: number}>;
+    sizes: Array<{name: String, qty: number}>;
     friends: String;
 }
 
@@ -92,7 +92,7 @@ const productSchema = new mongoose.Schema<IProduct>({
             name: {
                 type: String
             },
-            amount: {
+            qty: {
                 type: Number,
             },
         }

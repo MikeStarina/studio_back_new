@@ -12,20 +12,35 @@ import ServerError from '../utils/server-error-class';
 
 export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 
-  const orderData = req.body;
+  const orderData = await req.body;
 
 
-  let newOrder;
+  const data = {
+    owner_name: orderData.owner_name,
+    owner_phone: orderData.owner_phone,
+    owner_email: orderData.owner_email,
+    total_price: orderData.order_price,
+    order_key: orderData.order_key,
+    order_details: orderData.items
+  }
+
+
+
 
   try {
-    newOrder = await new order(orderData);
 
+    let newOrder;
+    newOrder = await new order(data);
+
+    console.log(newOrder);
+
+    console.log(newOrder);
 
 
 
     const receiptItems: any[] = [];
 
-    /*
+
     orderData.items.forEach((item: any, index: number) => {
       let newReceiptItem = {
         "description": item.print ? item.textile + 'c печатью' : item.textile,
@@ -40,11 +55,11 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
       }
 
       receiptItems.push(newReceiptItem);
-    }) */
+    })
 
     const paymentData = {
       "amount": {
-        "value": newOrder!.discounted_price ? newOrder.discounted_price : newOrder.total_price,
+        "value": orderData.order_price,
         "currency": "RUB"
       },
       "confirmation": {
@@ -53,29 +68,38 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
       },
       "receipt": {
         "customer": {
-          "full_name": newOrder.owner_name,
-          "phone": newOrder.owner_phone,
+          "full_name": orderData.owner_name,
+          "phone": orderData.owner_phone,
         },
         "items": receiptItems,
       },
-      "description": newOrder._id,
+      "description": orderData._id,
       "capture": true,
     }
 
     const paymentUrl = await paymentRequest(paymentData);
-    await sendMail({ to: newOrder.owner_email, subject: `New order №${newOrder.order_number}`});
+    let payload = `Ваш заказ на сумму ${orderData.order_price} Р. будет выполнен после оплаты.
+    Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`;
+
+
+
+    sendMail({ to: newOrder.owner_email, subject: `PNHD STUDIO | Заказ создан и ожидает оплаты`, payload});
 
 
 
 
 
 
-    await newOrder.save();
-    return res.send({ data: paymentUrl });
+
+
+    return await res.send({ paymentUrl, id: newOrder._id }), newOrder.save();
+
   }
   catch {
     next(ServerError.error400());
+    //next(e.message);
   }
+
 
 }
 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { uploadFunc } from "../controllers/uploads";
+import { createLead } from "../controllers/lead";
 
 
 
@@ -8,8 +8,8 @@ const router = Router();
 
 
 
+router.post('/', createLead);
 
-router.post('/', uploadFunc);
 
 
 export default router;

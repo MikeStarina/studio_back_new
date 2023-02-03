@@ -7,7 +7,9 @@ import ServerError from "../utils/server-error-class";
 export const getPaymentConfirmation = async (req: Request, res: Response, next: NextFunction) => {
 
 
-  const { description } = req.body;
+  console.log(req.body);
+
+  /*
 
   try {
     const currentOrder = await order.findOne({ description });
@@ -32,5 +34,5 @@ export const getPaymentConfirmation = async (req: Request, res: Response, next: 
     next(ServerError.error500())
 
   }
-
+  */
 }
