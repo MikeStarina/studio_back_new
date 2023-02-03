@@ -22,12 +22,11 @@ const ENV = dotenv.config();
 export const PORT = parseInt(ENV.parsed!.PORT);
 export const DBURL = ENV.parsed!.DBURL.toString();
 
-//mongodb://localhost:27017/studio
+
 console.log(DBURL);
 
 
 
-//DBURL=mongodb://Starina:123698745!%40@194.58.122.162:27017/?authMechanism=DEFAULT
 const app = express();
 app.use(express.json());
 app.use(cors());
