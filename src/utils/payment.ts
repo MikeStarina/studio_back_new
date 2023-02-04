@@ -9,7 +9,7 @@ export const paymentRequest = async (paymentData: any) => {
   const authData = Buffer.from(PAYMENT_AUTH).toString('base64');
 
   try {
-    /*
+
     const res = await fetch('https://api.yookassa.ru/v3/payments/', {
       method: 'POST',
       headers: {
@@ -21,8 +21,8 @@ export const paymentRequest = async (paymentData: any) => {
     })
 
     const resData = await res.json();
-    const paymentUrl = await resData.confirmation.confirmation_url; */
-    const paymentUrl = 'https://ya.ru'
+    const paymentUrl = await resData.confirmation.confirmation_url;
+    //const paymentUrl = 'https://ya.ru'
     return paymentUrl;
 
   }
