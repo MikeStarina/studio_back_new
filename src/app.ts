@@ -18,8 +18,8 @@ const ENV = dotenv.config();
 
 
 const corsOptions = {
-    origin: 'https://studio.pnhd.ru',
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+    origin: 'https://www.studio.pnhd.ru',
+    optionsSuccessStatus: 200,
   }
 
 
@@ -29,7 +29,7 @@ export const PORT = parseInt(ENV.parsed!.PORT);
 export const DBURL = ENV.parsed!.DBURL.toString();
 
 
-console.log(DBURL);
+//console.log(DBURL);
 
 
 
