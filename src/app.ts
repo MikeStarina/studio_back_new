@@ -18,7 +18,18 @@ const ENV = dotenv.config();
 
 
 const corsOptions = {
-    origin: 'https://www.studio.pnhd.ru',
+    origin: ['https://pnhdstudioapi.ru',
+    'https://studio.pnhd.ru',
+    'https://www.studio.pnhd.ru',
+    'http://127.0.0.1:1337',
+    'http://95.163.236.13:3000',
+    'http://studio.pnhd.ru',
+    'http://95.163.236.13',
+    'http://api.pnhd.ru',
+    'https://api.pnhd.ru',
+    'http://localhost:3000',
+    'http://localhost:1337',
+  ],
     optionsSuccessStatus: 200,
   }
 
