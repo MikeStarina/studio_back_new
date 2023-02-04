@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
+//const fetch = () => import('node-fetch').then(({default: fetch}) => fetch());
 
 const ENV = dotenv.config();
 export const PAYMENT_AUTH = ENV.parsed!.PAYMENT_AUTH.toString();
