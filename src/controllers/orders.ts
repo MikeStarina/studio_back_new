@@ -75,6 +75,9 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
       },
       "description": orderData._id,
       "capture": true,
+      "metadata": {
+        "id": orderData._id
+      }
     }
 
     const paymentUrl = await paymentRequest(paymentData);
