@@ -7,9 +7,11 @@ import ServerError from "../utils/server-error-class";
 export const getPaymentConfirmation = async (req: Request, res: Response, next: NextFunction) => {
 
 
-  console.log(req.body);
-  const confirmation = req.body;
-  const id = confirmation.metadata.id
+
+  const { object } = req.body;
+  console.log(object);
+  const id = object.metadata.id;
+  console.log(id);
 
 
   try {

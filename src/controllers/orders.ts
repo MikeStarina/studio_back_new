@@ -32,11 +32,12 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     let newOrder;
     newOrder = await new order(data);
 
-    console.log(newOrder);
+    //console.log(newOrder);
 
     console.log(newOrder);
 
-
+    console.log(newOrder._id.toString());
+    console.log(typeof newOrder._id.toString());
 
     const receiptItems: any[] = [];
 
