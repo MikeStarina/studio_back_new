@@ -17,6 +17,12 @@ import dotenv from 'dotenv';
 const ENV = dotenv.config();
 
 
+const corsOptions = {
+    origin: 'https://studio.pnhd.ru',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  }
+
+
 
 
 export const PORT = parseInt(ENV.parsed!.PORT);
@@ -29,7 +35,7 @@ console.log(DBURL);
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname + '/public')));
 
