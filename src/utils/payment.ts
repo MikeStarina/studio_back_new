@@ -1,11 +1,12 @@
 import dotenv from 'dotenv';
+import fetch from 'node-fetch';
 
 const ENV = dotenv.config();
 export const PAYMENT_AUTH = ENV.parsed!.PAYMENT_AUTH.toString();
 
 
 export const paymentRequest = async (paymentData: any) => {
-
+  console.log()
   const authData = Buffer.from(PAYMENT_AUTH).toString('base64');
 
   try {
@@ -19,8 +20,8 @@ export const paymentRequest = async (paymentData: any) => {
       },
       body: JSON.stringify(paymentData),
     })
-
-    const resData = await res.json();
+    console.log(res);
+    const resData: any = await res.json();
     const paymentUrl = await resData.confirmation.confirmation_url;
     //const paymentUrl = 'https://ya.ru'
     return paymentUrl;
