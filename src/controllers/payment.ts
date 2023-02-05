@@ -25,7 +25,7 @@ export const getPaymentConfirmation = async (req: Request, res: Response, next: 
       payload: 'Ваш заказ успешно оплачен! Немного магии и скоро все будет готово!'
     };
 
-    let order_details_string = '';
+    let order_details_string = `Имя: ${currentOrder!.owner_name}, Телефон: ${currentOrder!.owner_phone}, Email: ${currentOrder!.owner_email}, Стоимость: ${currentOrder!.total_price} `;
     currentOrder!.order_details.forEach((item, index) => {
       order_details_string = order_details_string + `№${index + 1}: Текстиль: ${item.textile}; Количество: ${item.qty}; Печать: Грудь: ${item.front_print ? item.front_print : ''}; Спина: ${item.back_print ? item.back_print : ''}; Л.Рукав: ${item.lsleeve_print ? item.lsleeve_print : ''}; П.Рукав: ${item.rsleeve_print ? item.rsleeve_print : ''} //`;
     })
