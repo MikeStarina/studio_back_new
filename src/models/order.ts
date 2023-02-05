@@ -20,12 +20,13 @@ export interface IOrder {
             textile: String;
             qty: number;
             item_price: number;
-            print?: {
-                front_print?: string;
-                back_print?: string;
-                lsleeve_print?: string;
-                rsleeve_print?: string;
-            };
+            print: boolean;
+
+            front_print?: string;
+            back_print?: string;
+            lsleeve_print?: string;
+            rsleeve_print?: string;
+
         },
     ];
     isPayed: boolean;
@@ -64,12 +65,12 @@ const orderSchema = new mongoose.Schema<IOrder>({
             item_price: {
               type: Number,
             },
-            print: {
-              front_print: { type: String },
-              back_print: { type: String },
-              lsleeve_print: { type: String },
-              rsleeve_print: { type: String },
-            },
+            print: { type: Boolean },
+            front_print: { type: String },
+            back_print: { type: String },
+            lsleeve_print: { type: String },
+            rsleeve_print: { type: String },
+
         },
     ],
 

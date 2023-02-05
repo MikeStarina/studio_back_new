@@ -7,17 +7,20 @@ export const PAYMENT_AUTH = ENV.parsed!.PAYMENT_AUTH.toString();
 
 
 export const paymentRequest = async (paymentData: any) => {
-  console.log()
+  //console.log()
   const authData = Buffer.from(PAYMENT_AUTH).toString('base64');
 
+
   try {
+
+
 
     const res = await fetch('https://api.yookassa.ru/v3/payments/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Basic ' + authData,
-        'Idempotence-Key': paymentData.order_key,
+        'Idempotence-Key': paymentData.metadata.id,
       },
       body: JSON.stringify(paymentData),
     })
