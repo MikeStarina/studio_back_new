@@ -9,30 +9,30 @@ export const getPaymentConfirmation = async (req: Request, res: Response, next: 
 
 
   const { object } = req.body;
-  console.log(object);
   const id = object.metadata.id;
-  console.log(id);
 
 
   try {
-    const currentOrder = await order.findOne({ id });
+    const currentOrder = await order.findOne({ _id: id });
+
+    //console.log(currentOrder);
     currentOrder!.isPayed = true;
     currentOrder!.order_status = 'pending';
 
     const userMailData = {
       to: currentOrder!.owner_email,
-      subject: 'Ваш заказ оплачен',
+      subject: 'PNHD STUDIO | Ваш заказ оплачен',
       payload: 'Ваш заказ успешно оплачен! Немного магии и скоро все будет готово!'
     };
 
     let order_details_string = '';
     currentOrder!.order_details.forEach((item, index) => {
-      order_details_string = order_details_string + `№${index + 1}: Текстиль: ${item.textile}; Количество: ${item.qty}; Печать: Грудь: ${item.print?.front_print ? item.print.front_print : ''}; Спина: ${item.print?.back_print ? item.print.back_print : ''}; Л.Рукав: ${item.print?.lsleeve_print ? item.print.lsleeve_print : ''}; П.Рукав: ${item.print?.rsleeve_print ? item.print.rsleeve_print : ''} //`;
+      order_details_string = order_details_string + `№${index + 1}: Текстиль: ${item.textile}; Количество: ${item.qty}; Печать: Грудь: ${item.front_print ? item.front_print : ''}; Спина: ${item.back_print ? item.back_print : ''}; Л.Рукав: ${item.lsleeve_print ? item.lsleeve_print : ''}; П.Рукав: ${item.rsleeve_print ? item.rsleeve_print : ''} //`;
     })
 
     const staffMailData = {
-      to: currentOrder!.owner_email,
-      subject: 'Новый заказ',
+      to: 'studio@pnhd.ru',
+      subject: `Новый заказ ${currentOrder!._id}` ,
       payload: order_details_string
     };
 

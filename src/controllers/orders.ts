@@ -14,6 +14,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
 
   const orderData = await req.body;
 
+  //console.log(orderData);
 
   const data = {
     owner_name: orderData.owner_name,
@@ -34,17 +35,17 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
 
     //console.log(newOrder);
 
-    console.log(newOrder);
+    //console.log(newOrder);
 
-    console.log(newOrder._id.toString());
-    console.log(typeof newOrder._id.toString());
+    //console.log(newOrder._id.toString());
+    //console.log(typeof newOrder._id.toString());
 
     const receiptItems: any[] = [];
 
 
     orderData.items.forEach((item: any, index: number) => {
       let newReceiptItem = {
-        "description": item.print ? item.textile + 'c печатью' : item.textile,
+        "description": item.print ? item.textile + ' c печатью' : item.textile,
               "quantity": item.qty,
               "amount": {
                 "value": item.item_price,
@@ -74,10 +75,10 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
         },
         "items": receiptItems,
       },
-      "description": orderData._id,
+      "description": newOrder._id.toString(),
       "capture": true,
       "metadata": {
-        "id": orderData._id
+        "id": newOrder._id.toString()
       }
     }
 
@@ -94,9 +95,11 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
 
 
 
+    const orderId = newOrder._id;
 
+    newOrder.save();
 
-    return await res.send({ paymentUrl, id: newOrder._id }), newOrder.save();
+    return await res.send({ paymentUrl, id: newOrder._id });
 
   }
   catch {
