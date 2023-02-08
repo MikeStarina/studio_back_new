@@ -14,7 +14,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
 
   const orderData = await req.body;
 
-  //console.log(orderData);
+
 
   const data = {
     owner_name: orderData.owner_name,
@@ -33,12 +33,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     let newOrder;
     newOrder = await new order(data);
 
-    //console.log(newOrder);
 
-    //console.log(newOrder);
-
-    //console.log(newOrder._id.toString());
-    //console.log(typeof newOrder._id.toString());
 
     const receiptItems: any[] = [];
 
@@ -70,8 +65,8 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
       },
       "receipt": {
         "customer": {
-          "full_name": orderData.owner_name,
-          "phone": orderData.owner_phone,
+          "full_name": newOrder.owner_name,
+          "phone": newOrder.owner_phone,
         },
         "items": receiptItems,
       },
@@ -82,9 +77,9 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
       }
     }
 
-    const paymentUrl = await paymentRequest(paymentData);
+    //const paymentUrl = await paymentRequest(paymentData);
     let payload = `Ваш заказ на сумму ${orderData.order_price} Р. будет выполнен после оплаты.
-    Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`;
+    Дублируем ссылку на оплату на всякий случай: `; //${paymentUrl}
 
 
 
@@ -99,7 +94,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
 
     newOrder.save();
 
-    return await res.send({ paymentUrl, id: newOrder._id });
+    return await res.send({ id: newOrder._id });
 
   }
   catch {
