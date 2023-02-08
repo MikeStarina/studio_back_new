@@ -77,9 +77,9 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
       }
     }
 
-    //const paymentUrl = await paymentRequest(paymentData);
+    const paymentUrl = await paymentRequest(paymentData);
     let payload = `Ваш заказ на сумму ${orderData.order_price} Р. будет выполнен после оплаты.
-    Дублируем ссылку на оплату на всякий случай: `; //${paymentUrl}
+    Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`; //
 
 
 
@@ -94,7 +94,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
 
     newOrder.save();
 
-    return await res.send({ id: newOrder._id });
+    return await res.send({ paymentUrl, id: newOrder._id });
 
   }
   catch {
