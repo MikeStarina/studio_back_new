@@ -14,6 +14,8 @@ import dotenv from 'dotenv';
 
 
 
+
+
 const ENV = dotenv.config();
 
 
@@ -53,6 +55,8 @@ app.use(express.static(path.join(__dirname + '/public')));
 
 mongoose.set('strictQuery', true);
 mongoose.connect(DBURL, { dbName: 'studio' });
+
+
 
 
 app.use(requestLogger);

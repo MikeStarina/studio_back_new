@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import path from "path";
+import crypto from 'crypto';
 import imageSize from "image-size";
+import ServerError from "../utils/server-error-class";
 
 
 
@@ -10,20 +12,42 @@ import imageSize from "image-size";
 
 
 export const uploadFunc = async (req: Request, res: Response, next: NextFunction) => {
+
   const files: any = await req.files;
 
 
 
+  try {
 
-  const filePath = path.resolve(`src/public/uploads/${files.files.name}`);
+    let fileExt = '';
+    if (files.files.mimetype !== 'image/jpeg' || files.files.mimetype !== 'image/jpg') {
+      fileExt = '.jpg';
+    } else if (files.files.mimetype !== 'image/png') {
+      fileExt = '.png';
+    } else {
+      throw ServerError.error400('Неверный формат файла. Используйте png или jpg');
+    }
 
-  const fileUrl = `/uploads/${files.files.name}`;
-  await files.files.mv(filePath);
 
-  const size = await imageSize(filePath)
+    const newFilename = `${crypto.randomUUID()}${fileExt}`;
+    console.log(newFilename)
+
+    const filePath = path.resolve(`src/public/uploads/${newFilename}`);
+    console.log(filePath)
+    const fileUrl = `/uploads/${newFilename}`;
+    await files.files.mv(filePath);
+    const size = await imageSize(filePath)
+    console.log(size)
+    if (!size) throw ServerError.error500('произошла неизвестная ошибка при загрузке файла');
 
 
 
 
-  res.send({ message: 'upload succesful', url: fileUrl, name: files.files.name, width: size.width, height: size.height });
+    res.send({ message: 'upload succesful', url: fileUrl, name: newFilename, width: size.width, height: size.height });
+  }
+  catch (e) {
+    next(e)
+  }
+
+
 }
