@@ -30,14 +30,14 @@ export const uploadFunc = async (req: Request, res: Response, next: NextFunction
 
 
     const newFilename = `${crypto.randomUUID()}${fileExt}`;
-    console.log(newFilename)
+
 
     const filePath = path.resolve(`src/public/uploads/${newFilename}`);
-    console.log(filePath)
+
     const fileUrl = `/uploads/${newFilename}`;
     await files.files.mv(filePath);
     const size = await imageSize(filePath)
-    console.log(size)
+
     if (!size) throw ServerError.error500('произошла неизвестная ошибка при загрузке файла');
 
 
