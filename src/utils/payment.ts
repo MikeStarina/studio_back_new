@@ -24,7 +24,7 @@ export const paymentRequest = async (paymentData: any) => {
       },
       body: JSON.stringify(paymentData),
     })
-    console.log(res);
+
     const resData: any = await res.json();
     const paymentUrl = await resData.confirmation.confirmation_url;
     //const paymentUrl = 'https://ya.ru'
