@@ -21,6 +21,8 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     owner_phone: orderData.owner_phone,
     owner_email: orderData.owner_email,
     total_price: orderData.order_price,
+    discounted_price: orderData.order_discounted_price,
+    promocode: orderData.order_promocode,
     order_key: orderData.order_key,
     order_details: orderData.items
   }
@@ -56,7 +58,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
 
     const paymentData = {
       "amount": {
-        "value": orderData.order_price,
+        "value": newOrder.discounted_price,
         "currency": "RUB"
       },
       "confirmation": {

@@ -6,6 +6,7 @@ import orderRouter from './routes/orders';
 import paymentRouter from './routes/payment';
 import uploadRouter from './routes/uploads';
 import leadRouter from './routes/lead';
+import promocodeRouter from './routes/promocodes';
 import { errorHandler } from './middlewares/errors';
 import { requestLogger, errorLogger } from './middlewares/logger';
 import cors from 'cors';
@@ -65,6 +66,7 @@ app.use('/api/products', productRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/payments', paymentRouter);
 app.use('/api/leads', leadRouter)
+app.use('/api/promocodes', promocodeRouter);
 app.use(fileUpload());
 app.use('/api/uploads', uploadRouter)
 
