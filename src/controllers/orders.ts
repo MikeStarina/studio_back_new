@@ -20,7 +20,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     owner_name: orderData.owner_name,
     owner_phone: orderData.owner_phone,
     owner_email: orderData.owner_email,
-    total_price: orderData.order_price,
+    total_price: orderData.order_total_price,
     discounted_price: orderData.order_discounted_price,
     promocode: orderData.order_promocode,
     order_key: orderData.order_key,
