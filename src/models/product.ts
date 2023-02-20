@@ -9,6 +9,7 @@ interface IProduct {
     type: String;
     price: Number;
     weight: Number;
+    stock: String;
     color: String;
     category: String;
     isSale: boolean;
@@ -49,6 +50,10 @@ const productSchema = new mongoose.Schema<IProduct>({
     weight: {
         type: Number,
         required: true,
+    },
+    stock: {
+      type: String,
+      default: 'studio' //supplier
     },
     color: {
         type: String,
