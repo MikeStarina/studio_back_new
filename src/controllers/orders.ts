@@ -80,7 +80,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     }
 
     const paymentUrl = await paymentRequest(paymentData);
-    let payload = `Ваш заказ на сумму ${orderData.order_price} Р. будет выполнен после оплаты.
+    let payload = `Ваш заказ на сумму ${newOrder.discounted_price} Р. будет выполнен после оплаты.
     Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`; //
 
 
