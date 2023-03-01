@@ -81,11 +81,19 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
 
     const paymentUrl = await paymentRequest(paymentData);
     let payload = `Ваш заказ на сумму ${newOrder.discounted_price} Р. будет выполнен после оплаты.
-    Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`; //
+    Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`;
 
 
 
     sendMail({ to: newOrder.owner_email, subject: `PNHD STUDIO | Заказ создан и ожидает оплаты`, payload});
+
+    let staffPayload = {
+      to: 'studio@pnhd.ru',
+      subject: `Создан заказ ${newOrder._id} [не оплачено]`,
+      payload: `Заказчик: ${newOrder.owner_name}, телефон: ${newOrder.owner_phone}, сумма заказа: ${newOrder.discounted_price}`
+    }
+
+    sendMail(staffPayload);
 
 
 

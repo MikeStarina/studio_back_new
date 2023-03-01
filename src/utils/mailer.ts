@@ -9,7 +9,7 @@ export const MAIL_PASS = ENV.parsed!.MAIL_PASS.toString();
 type TMailData = {
   to: string;
   subject: string;
-  payload?: string;
+  payload: string;
 }
 
 
