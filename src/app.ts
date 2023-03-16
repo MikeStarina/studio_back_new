@@ -62,6 +62,7 @@ mongoose.connect(DBURL, { dbName: 'studio' });
 
 app.use(requestLogger);
 
+//app.use('/api/shipping', shippingRouter);
 app.use('/api/products', productRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/payments', paymentRouter);
