@@ -7,6 +7,7 @@ import paymentRouter from './routes/payment';
 import uploadRouter from './routes/uploads';
 import leadRouter from './routes/lead';
 import promocodeRouter from './routes/promocodes';
+import shippingRouter from './routes/shipping';
 import { errorHandler } from './middlewares/errors';
 import { requestLogger, errorLogger } from './middlewares/logger';
 import cors from 'cors';
@@ -62,7 +63,7 @@ mongoose.connect(DBURL, { dbName: 'studio' });
 
 app.use(requestLogger);
 
-//app.use('/api/shipping', shippingRouter);
+app.use('/api/shipping', shippingRouter);
 app.use('/api/products', productRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/payments', paymentRouter);
