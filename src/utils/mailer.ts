@@ -24,8 +24,7 @@ export const sendMail = async (data: TMailData) => {
 
   const mail = await transporter.sendMail({
     from: "studio@pnhd.ru",
-    // to: data.to,
-    to: "argin606@gmail.com",
+    to: data.to,
     subject: data.subject,
     text: data.payload,
   });
