@@ -14,7 +14,6 @@ import cors from "cors";
 import fileUpload from "express-fileupload";
 import dotenv from "dotenv";
 import { errors } from "celebrate";
-import { getCdekToken } from "./utils/cdek-token";
 
 const ENV = dotenv.config();
 
@@ -52,8 +51,6 @@ mongoose.set("strictQuery", true);
 mongoose.connect(DBURL, { dbName: "studio" });
 
 app.use(requestLogger);
-
-(async () => await getCdekToken())();
 
 app.use("/api/shipping", shippingRouter);
 app.use("/api/products", productRouter);
