@@ -1,39 +1,33 @@
 import { Request, Response, NextFunction } from "express";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import ServerError from "../utils/server-error-class";
-import fetch from 'node-fetch';
-
+import fetch from "node-fetch";
+import { getCdekToken } from "../utils/cdek-token";
 
 const ENV = dotenv.config();
 const CDEK_CITIES_URL = ENV.parsed!.CDEK_CITIES_URL.toString();
 
-
-export const cdekCities = async (req: Request, res: Response, next: NextFunction) => {
-
-
-  const cdekToken = req.body.token;
-
-
+export const cdekCities = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  //  Берем запрос с фронта, весь после "?" и подставляем в запрос серверу..
+  const url = req.originalUrl.split("?").slice(1).join();
   try {
-
-    const cities = fetch(`${CDEK_CITIES_URL}`, {
-      method: 'GET',
+    await getCdekToken();
+    const cities = await fetch(`${CDEK_CITIES_URL}?${url}`, {
+      method: "GET",
       headers: {
-        'Accept': '*',
-        'Content-Length': '',
-        "Сontent-type": "application/json",
-        'Authorization': cdekToken,
-      }
-    })
-
-
-    if (!cities) throw ServerError.error500('Не удалось получить список городов СДЕК')
-
-
-    return await res.status(200).send(cities);
-
+        Authorization: `Bearer ${await getCdekToken()} `,
+      },
+    });
+    const data = await cities.json();
+    if (cities.status === 404) {
+      return res.status(404).json({ error: "server CDEK cities" });
+    }
+    return res.json(data);
+  } catch (err) {
+    res.status(500).json(err);
   }
-  catch {
-    ServerError.error500();
-  }
-}
+};
