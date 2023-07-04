@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import { getCdekToken } from "../utils/cdek-token";
 import fetch from "node-fetch";
-import ServerError from "../utils/server-error-class";
 
 const ENV = dotenv.config();
 const CDEK_CALCULATE_DELIVERY = ENV.parsed!.CDEK_CALCULATE_DELIVERY.toString();

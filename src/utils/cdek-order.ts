@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import fetch from "node-fetch";
-import { getCdekToken } from "../utils/cdek-token";
+import { getCdekToken } from "./cdek-token";
 
 const ENV = dotenv.config();
 const CDEK_CREATE_ORDER = ENV.parsed!.CDEK_CREATE_ORDER.toString();
 
-export const cdekCreateOrder = async (
+export const cdekOrder = async (
   req: Request,
   res: Response,
   next: NextFunction
