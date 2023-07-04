@@ -20,29 +20,7 @@ export const cdekCalculateDelivery = async (
         "Content-Type": `application/json`,
         Authorization: `Bearer ${await getCdekToken()} `,
       },
-      body: JSON.stringify({
-        tariff_code: "138",
-        from_location: {
-          code: "137",
-        },
-        to_location: {
-          code: `${req.body.to_location}`,
-        },
-        services: [
-          {
-            code: "INSURANCE",
-            parameter: "2",
-          },
-        ],
-        packages: [
-          {
-            height: "10",
-            length: "10",
-            weight: "1000",
-            width: "10",
-          },
-        ],
-      }),
+      body: JSON.stringify(req.body),
     });
 
     const data = await deliveryPoint.json();
