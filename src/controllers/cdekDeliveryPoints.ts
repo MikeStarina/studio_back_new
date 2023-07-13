@@ -15,9 +15,11 @@ export const cdekDeliveryPoints = async (
 ) => {
   //  Берем запрос с фронта, весь после "?" и подставляем в запрос сервера..
   const url = req.originalUrl.split("?").slice(1).join();
+
   try {
     await getCdekToken();
-    const deliveryPoint = await fetch(`${CDEK_DELIVERY_POINTS_URL}?${url} `, {
+    // const deliveryPoint = await fetch(`${CDEK_DELIVERY_POINTS_URL}?${url} `, {
+      const deliveryPoint = await fetch(`https://api.cdek.ru/v2/deliverypoints?${url} `, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${await getCdekToken()} `,
