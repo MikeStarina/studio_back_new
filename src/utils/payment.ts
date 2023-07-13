@@ -7,9 +7,7 @@ export const PAYMENT_AUTH = ENV.parsed!.PAYMENT_AUTH.toString();
 
 
 export const paymentRequest = async (paymentData: any) => {
-  //console.log()
   const authData = Buffer.from(PAYMENT_AUTH).toString('base64');
-
 
   try {
 

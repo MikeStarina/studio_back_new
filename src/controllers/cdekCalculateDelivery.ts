@@ -14,6 +14,7 @@ export const cdekCalculateDelivery = async (
   try {
     await getCdekToken();
     const deliveryPoint = await fetch(`${CDEK_CALCULATE_DELIVERY} `, {
+      // const deliveryPoint = await fetch(`https://api.cdek.ru/v2/calculator/tariff`, {
       method: "POST",
       headers: {
         "Content-Type": `application/json`,

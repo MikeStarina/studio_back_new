@@ -14,6 +14,7 @@ export const cdekCities = async (
 ) => {
   //  Берем запрос с фронта, весь после "?" и подставляем в запрос серверу..
   const url = req.originalUrl.split("?").slice(1).join();
+
   try {
     await getCdekToken();
     const cities = await fetch(`${CDEK_CITIES_URL}?${url}`, {
@@ -30,4 +31,5 @@ export const cdekCities = async (
   } catch (err) {
     res.status(500).json(err);
   }
+
 };
