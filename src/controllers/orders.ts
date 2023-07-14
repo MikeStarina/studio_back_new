@@ -113,7 +113,7 @@ export const createOrder = async (
     //   payload: `Заказчик: ${newOrder.owner_name}, телефон: ${newOrder.owner_phone}, сумма заказа: ${newOrder.discounted_price}`
     // }
     let staffPayload = {
-        to: 'fallenarh@gmail.com',
+        to: 'test@yandex.ru',
         subject: `Создан заказ ${newOrder._id} [не оплачено] тест отправки письма`,
         payload: `Заказчик: ${newOrder.owner_name}, телефон: ${newOrder.owner_phone}, сумма заказа: ${newOrder.discounted_price}`,
         html: await orderClientTemplate(newOrder),
@@ -125,7 +125,6 @@ export const createOrder = async (
     const orderId = newOrder._id;
     newOrder.save();
     // return await res.send({ paymentUrl, id: newOrder._id });
-    // return await res.send({ newOrder });
   } catch {
     next(ServerError.error400());
     //next(e.message);

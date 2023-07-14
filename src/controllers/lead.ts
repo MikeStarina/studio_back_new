@@ -26,8 +26,7 @@ export const createLead = async (
     // );
 
     sendMail({
-      //**тут поменять на to: "studio@pnhd.ru",
-      to: "test@gmail.com",
+      to: "studio@pnhd.ru",
       subject: "Новая заявка на звонок",
       payload,
       html:'',
