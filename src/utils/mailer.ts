@@ -9,6 +9,7 @@ type TMailData = {
   to: string;
   subject: string;
   payload: string;
+  html: any;
 };
 
 export const sendMail = async (data: TMailData) => {
@@ -27,6 +28,7 @@ export const sendMail = async (data: TMailData) => {
     to: data.to,
     subject: data.subject,
     text: data.payload,
+    html: data.html,
   });
 
   //console.log(mail);

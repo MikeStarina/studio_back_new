@@ -36,8 +36,8 @@ export const getPaymentConfirmation = async (req: Request, res: Response, next: 
       payload: order_details_string
     };
 
-    await sendMail(userMailData) //письмо клиенту
-    await sendMail(staffMailData) //письмо наше
+    //await sendMail(userMailData) //письмо клиенту
+    //await sendMail(staffMailData) //письмо наше
 
     await currentOrder!.save();
   }

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { orderClientTemplate } from "../template/orderClientTemplate";
 import order from "../models/order";
 import { sendMail } from "../utils/mailer";
 import { paymentRequest } from "../utils/payment";
@@ -100,7 +101,6 @@ export const createOrder = async (
       },
     };
 
-    console.log(receiptItems);
     // const paymentUrl = await paymentRequest(paymentData);
     // let payload = `Ваш заказ на сумму ${newOrder.discounted_price} Р. будет выполнен после оплаты.
     // Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`;
@@ -112,8 +112,15 @@ export const createOrder = async (
     //   subject: `Создан заказ ${newOrder._id} [не оплачено]`,
     //   payload: `Заказчик: ${newOrder.owner_name}, телефон: ${newOrder.owner_phone}, сумма заказа: ${newOrder.discounted_price}`
     // }
+    let staffPayload = {
+        to: 'fallenarh@gmail.com',
+        subject: `Создан заказ ${newOrder._id} [не оплачено] тест отправки письма`,
+        payload: `Заказчик: ${newOrder.owner_name}, телефон: ${newOrder.owner_phone}, сумма заказа: ${newOrder.discounted_price}`,
+        html: await orderClientTemplate(newOrder),
+      }
 
-    // sendMail(staffPayload);
+    sendMail(staffPayload);
+
 
     const orderId = newOrder._id;
     newOrder.save();
