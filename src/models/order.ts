@@ -90,6 +90,8 @@ export interface IOrder {
   comment: string;
   order_details: [
     {
+      type: String;
+      links: [];
       //textile: mongoose.Schema.Types.ObjectId;
       textile: String;
       qty: [{
@@ -233,6 +235,9 @@ const orderSchema = new mongoose.Schema<IOrder>({
   comment: { type: String },
   order_details: [
     {
+
+  links: [],
+  type: {type:String},
       //textile: mongoose.Schema.Types.ObjectId;
       textile: { type: String },
       qty: [{

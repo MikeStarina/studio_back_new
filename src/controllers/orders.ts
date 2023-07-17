@@ -4,6 +4,7 @@ import order from "../models/order";
 import { sendMail } from "../utils/mailer";
 import { paymentRequest } from "../utils/payment";
 import ServerError from "../utils/server-error-class";
+import { IReceiptItems,IOrderItem } from "types/orders";
 
 export const createOrder = async (
   req: Request,
@@ -34,15 +35,15 @@ export const createOrder = async (
 
     // console.log(newOrder);
 
-    const receiptItems: any[] = [];
+    const receiptItems: IReceiptItems[] = [];
 
     let allPrintPrice = 0;
-    orderData.items.forEach((item: any, index: number) => {
+    orderData.items.forEach((item: IOrderItem) => {
       let newReceiptItem = {
-        description: item.print ? item.textile + " c печатью" : item.textile,
+        description: item.print ? item.name + " c печатью" : item.name,
         quantity: item.qtyAll,
         amount: {
-          value: (item.item_price-item.printPrice)/item.qtyAll,
+          value: item.isPrint?(item.item_price-item.printPrice)/item.qtyAll:item.item_price/item.qtyAll,
           currency: "RUB",
         },
         vat_code: "2",
@@ -66,6 +67,7 @@ export const createOrder = async (
       payment_subject: "commodity",
     });
 
+   if(data.isShipping){
     receiptItems.push({
       description: "Доставка СДЕК",
       quantity: 1,
@@ -77,6 +79,7 @@ export const createOrder = async (
       payment_mode: "full_prepayment",
       payment_subject: "commodity",
     });
+   }
 
     const paymentData = {
       amount: {
@@ -101,6 +104,19 @@ export const createOrder = async (
       },
     };
 
+    let mailData = {
+      owner_name: data.owner_name,
+      owner_phone: data.owner_phone,
+      owner_email: data.owner_email,
+      isShipping: data.isShipping,
+      shipping_city: data.shipping_city,
+      shipping_point: data.shipping_point,
+      total_price: data.total_price,
+      promocode: data.promocode,
+      discounted_price: data.discounted_price,
+      shipping_price: data.shipping_price,
+      order_details:data.order_details,
+    }
     // const paymentUrl = await paymentRequest(paymentData);
     // let payload = `Ваш заказ на сумму ${newOrder.discounted_price} Р. будет выполнен после оплаты.
     // Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`;
@@ -112,13 +128,16 @@ export const createOrder = async (
     //   subject: `Создан заказ ${newOrder._id} [не оплачено]`,
     //   payload: `Заказчик: ${newOrder.owner_name}, телефон: ${newOrder.owner_phone}, сумма заказа: ${newOrder.discounted_price}`
     // }
+
+
     let staffPayload = {
-        to: 'test@yandex.ru',
+        to: 'test@gmail.com',
         subject: `Создан заказ ${newOrder._id} [не оплачено] тест отправки письма`,
         payload: `Заказчик: ${newOrder.owner_name}, телефон: ${newOrder.owner_phone}, сумма заказа: ${newOrder.discounted_price}`,
-        html: await orderClientTemplate(newOrder),
+        html: await orderClientTemplate(mailData),
       }
 
+      // console.log(receiptItems)
     sendMail(staffPayload);
 
 

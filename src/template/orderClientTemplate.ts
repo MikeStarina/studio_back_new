@@ -1,4 +1,7 @@
-export const orderClientTemplate = (data: any) => {
+import { IMailOrderdata } from "types/orders";
+
+
+export const orderClientTemplate = (data: IMailOrderdata) => {
   const {
     owner_name,
     owner_phone,
@@ -1372,7 +1375,7 @@ style="padding: 0; margin: 0; width: 20px"
         let lsleevePrint = getPreview(elem.lsleeve_print);
         let rsleevePrint = getPreview(elem.rsleeve_print);
         product += itemTemplate(
-          elem.textile,
+          elem.name,
           elem.qtyAll,
           sizes,
           index,
@@ -1383,7 +1386,7 @@ style="padding: 0; margin: 0; width: 20px"
         );
       } else {
         product += itemTemplateWithoutPrints(
-          elem.textile,
+          elem.name,
           elem.qtyAll,
           sizes,
           index
