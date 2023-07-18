@@ -28,11 +28,10 @@ export const orderClientTemplate = (data: IMailOrderdata) => {
     font-size: 14px;
   "
   >
-  Адрес доставки: ${shipping_city.city}, ${shipping_point.name}
+  Адрес доставки: ${shipping_city.city}, ${shipping_point.name}, ${shipping_point.location.address}
   </p>`
     : "";
-
-  const shipping = isShipping ? "Доставка СДЭК" : "Самовывоз из студии";
+  const shipping = isShipping ? "Доставка СДЭК (до ПВЗ)" : "Самовывоз из студии";
 
   const shippingPrice = isShipping
     ? ` <p
@@ -47,7 +46,7 @@ export const orderClientTemplate = (data: IMailOrderdata) => {
     font-size: 14px;
   "
 >
-  Стоимость доставки: ${shipping_price}
+  Стоимость доставки: ${shipping_price} Р
 </p>
 <p
 style="
@@ -61,7 +60,7 @@ style="
   font-size: 14px;
 "
 >
-Полная стоимость:&nbsp; ${total_price + shipping_price}
+Полная стоимость:&nbsp; ${total_price + shipping_price} Р
 </p>`
     : ``;
 
@@ -97,7 +96,7 @@ style="
   font-size: 14px;
 "
 >
-Стоимость со скидкой:&nbsp; ${discounted_price}
+Стоимость со скидкой:&nbsp; ${discounted_price} Р
 </p>`
       : "";
 
@@ -113,7 +112,7 @@ style="
   };
   const getPreview = (item: string) => {
     let preview =
-      "https://qorubx.stripocdn.email/content/guids/CABINET_56301896e6bf82af72be776fc81b1a654ca731e87302fc9154d94b6f1cb13aa3/images/13409ab958f74acbb102b185c8465168_RVB.png";
+      "";
     if (item != "") {
       preview = item.slice(
         item.indexOf("Превью: ") + 8,
@@ -130,8 +129,398 @@ style="
     frontPrint: string,
     backPrint: string,
     lsleevePrint: string,
-    rsleevePrint: string
+    rsleevePrint: string,
+    frontPrintStr: string,
+    backPrintStr: string,
+    lsleevePrintStr: string,
+    rsleevePrintStr: string,
   ) => {
+    const frontPrintLink = frontPrint != "" ? `<table
+    cellpadding="0"
+    cellspacing="0"
+    width="100%"
+    role="presentation"
+    style="
+    mso-table-lspace: 0pt;
+    mso-table-rspace: 0pt;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    "
+    >
+    <tr>
+    <td
+      align="center"
+      style="padding: 0; margin: 0"
+    >
+      <!--[if mso
+        ]><a href=${frontPrint} target="_blank" hidden>
+          <v:roundrect
+            xmlns:v="urn:schemas-microsoft-com:vml"
+            xmlns:w="urn:schemas-microsoft-com:office:word"
+            esdevVmlButton
+            href=""
+            style="
+              height: 40px;
+              v-text-anchor: middle;
+              width: 89px;
+            "
+            arcsize="50%"
+            strokecolor="#2cb543"
+            strokeweight="1px"
+            fillcolor="#00fd22"
+          >
+            <w:anchorlock></w:anchorlock>
+            <center
+              style="
+                color: #ffffff;
+                font-family: arial,
+                  'helvetica neue', helvetica,
+                  sans-serif;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 14px;
+                mso-text-raise: 1px;
+              "
+            >
+              Грудь
+            </center>
+          </v:roundrect></a
+        > <!
+      [endif]--><!--[if !mso]--><!-- --><span
+        class="es-button-border msohide"
+        style="
+          border-style: solid;
+          border-color: #2cb543;
+          background: #00fd22;
+          border-width: 0px 0px 2px 0px;
+          display: inline-block;
+          border-radius: 30px;
+          width: auto;
+          mso-hide: all;
+        "
+        ><a
+          href=${frontPrint}
+          class="es-button"
+          target="_blank"
+          style="
+            mso-style-priority: 100 !important;
+            text-decoration: none !important;
+            mso-line-height-rule: exactly;
+            color: #ffffff;
+            font-size: 18px;
+            padding: 10px 20px 10px 20px;
+            display: inline-block;
+            background: #00fd22;
+            border-radius: 30px;
+            font-family: arial, 'helvetica neue',
+              helvetica, sans-serif;
+            font-weight: normal;
+            font-style: normal;
+            line-height: 22px;
+            width: auto;
+            text-align: center;
+            letter-spacing: 0;
+            mso-padding-alt: 0;
+            mso-border-alt: 10px solid #00fd22;
+          "
+          >Грудь</a
+        ></span
+      ><!--<![endif]-->
+    </td>
+    </tr>
+    </table>`: '';
+    const backPrintLink = backPrint != "" ? `<table
+    cellpadding="0"
+    cellspacing="0"
+    width="100%"
+    role="presentation"
+    style="
+    mso-table-lspace: 0pt;
+    mso-table-rspace: 0pt;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    "
+    >
+    <tr>
+    <td
+      align="center"
+      style="padding: 0; margin: 0"
+    >
+      <!--[if mso
+        ]><a href=${backPrint} target="_blank" hidden>
+          <v:roundrect
+            xmlns:v="urn:schemas-microsoft-com:vml"
+            xmlns:w="urn:schemas-microsoft-com:office:word"
+            esdevVmlButton
+            href=""
+            style="
+              height: 40px;
+              v-text-anchor: middle;
+              width: 95px;
+            "
+            arcsize="50%"
+            strokecolor="#2cb543"
+            strokeweight="1px"
+            fillcolor="#00fd22"
+          >
+            <w:anchorlock></w:anchorlock>
+            <center
+              style="
+                color: #ffffff;
+                font-family: arial,
+                  'helvetica neue', helvetica,
+                  sans-serif;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 14px;
+                mso-text-raise: 1px;
+              "
+            >
+              Спина
+            </center>
+          </v:roundrect></a
+        > <!
+      [endif]--><!--[if !mso]--><!-- --><span
+        class="es-button-border msohide"
+        style="
+          border-style: solid;
+          border-color: #2cb543;
+          background: #00fd22;
+          border-width: 0px 0px 2px 0px;
+          display: inline-block;
+          border-radius: 30px;
+          width: auto;
+          mso-hide: all;
+        "
+        ><a
+          href=${backPrint}
+          class="es-button"
+          target="_blank"
+          style="
+            mso-style-priority: 100 !important;
+            text-decoration: none !important;
+            mso-line-height-rule: exactly;
+            color: #ffffff;
+            font-size: 18px;
+            padding: 10px 20px 10px 20px;
+            display: inline-block;
+            background: #00fd22;
+            border-radius: 30px;
+            font-family: arial, 'helvetica neue',
+              helvetica, sans-serif;
+            font-weight: normal;
+            font-style: normal;
+            line-height: 22px;
+            width: auto;
+            text-align: center;
+            letter-spacing: 0;
+            mso-padding-alt: 0;
+            mso-border-alt: 10px solid #00fd22;
+          "
+          >Спина</a
+        ></span
+      ><!--<![endif]-->
+    </td>
+    </tr>
+    </table>`: '';
+    const lsleevePrintLink = lsleevePrint != "" ? `<table
+    cellpadding="0"
+    cellspacing="0"
+    width="100%"
+    role="presentation"
+    style="
+    mso-table-lspace: 0pt;
+    mso-table-rspace: 0pt;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    "
+    >
+    <tr>
+    <td
+      align="center"
+      style="padding: 0; margin: 0"
+    >
+      <!--[if mso
+        ]><a href=${lsleevePrint} target="_blank" hidden>
+          <v:roundrect
+            xmlns:v="urn:schemas-microsoft-com:vml"
+            xmlns:w="urn:schemas-microsoft-com:office:word"
+            esdevVmlButton
+            href=""
+            style="
+              height: 40px;
+              v-text-anchor: middle;
+              width: 111px;
+            "
+            arcsize="50%"
+            strokecolor="#2cb543"
+            strokeweight="1px"
+            fillcolor="#00fd22"
+          >
+            <w:anchorlock></w:anchorlock>
+            <center
+              style="
+                color: #ffffff;
+                font-family: arial,
+                  'helvetica neue', helvetica,
+                  sans-serif;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 14px;
+                mso-text-raise: 1px;
+              "
+            >
+              Л. рукав
+            </center>
+          </v:roundrect></a
+        > <!
+      [endif]--><!--[if !mso]--><!-- --><span
+        class="es-button-border msohide"
+        style="
+          border-style: solid;
+          border-color: #2cb543;
+          background: #00fd22;
+          border-width: 0px 0px 2px 0px;
+          display: inline-block;
+          border-radius: 30px;
+          width: auto;
+          mso-hide: all;
+        "
+        ><a
+          href=${lsleevePrint}
+          class="es-button"
+          target="_blank"
+          style="
+            mso-style-priority: 100 !important;
+            text-decoration: none !important;
+            mso-line-height-rule: exactly;
+            color: #ffffff;
+            font-size: 18px;
+            padding: 10px 20px 10px 20px;
+            display: inline-block;
+            background: #00fd22;
+            border-radius: 30px;
+            font-family: arial, 'helvetica neue',
+              helvetica, sans-serif;
+            font-weight: normal;
+            font-style: normal;
+            line-height: 22px;
+            width: auto;
+            text-align: center;
+            letter-spacing: 0;
+            mso-padding-alt: 0;
+            mso-border-alt: 10px solid #00fd22;
+          "
+          >Л. рукав</a
+        ></span
+      ><!--<![endif]-->
+    </td>
+    </tr>
+    </table>` : '';
+    const rsleevePrintLink = rsleevePrint != "" ? `<table
+    cellpadding="0"
+    cellspacing="0"
+    width="100%"
+    role="presentation"
+    style="
+    mso-table-lspace: 0pt;
+    mso-table-rspace: 0pt;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    "
+    >
+    <tr>
+    <td
+      align="center"
+      style="padding: 0; margin: 0"
+    >
+      <!--[if mso
+        ]><a href=${rsleevePrint} target="_blank" hidden>
+          <v:roundrect
+            xmlns:v="urn:schemas-microsoft-com:vml"
+            xmlns:w="urn:schemas-microsoft-com:office:word"
+            esdevVmlButton
+            href=""
+            style="
+              height: 40px;
+              v-text-anchor: middle;
+              width: 112px;
+            "
+            arcsize="50%"
+            strokecolor="#2cb543"
+            strokeweight="1px"
+            fillcolor="#00fd22"
+          >
+            <w:anchorlock></w:anchorlock>
+            <center
+              style="
+                color: #ffffff;
+                font-family: arial,
+                  'helvetica neue', helvetica,
+                  sans-serif;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 14px;
+                mso-text-raise: 1px;
+              "
+            >
+              П. рукав
+            </center>
+          </v:roundrect></a
+        > <!
+      [endif]--><!--[if !mso]--><!-- --><span
+        class="es-button-border msohide"
+        style="
+          border-style: solid;
+          border-color: #2cb543;
+          background: #00fd22;
+          border-width: 0px 0px 2px 0px;
+          display: inline-block;
+          border-radius: 30px;
+          width: auto;
+          mso-hide: all;
+        "
+        ><a
+          href=${rsleevePrint}
+          class="es-button"
+          target="_blank"
+          style="
+            mso-style-priority: 100 !important;
+            text-decoration: none !important;
+            mso-line-height-rule: exactly;
+            color: #ffffff;
+            font-size: 18px;
+            padding: 10px 20px 10px 20px;
+            display: inline-block;
+            background: #00fd22;
+            border-radius: 30px;
+            font-family: arial, 'helvetica neue',
+              helvetica, sans-serif;
+            font-weight: normal;
+            font-style: normal;
+            line-height: 22px;
+            width: auto;
+            text-align: center;
+            letter-spacing: 0;
+            mso-padding-alt: 0;
+            mso-border-alt: 10px solid #00fd22;
+          "
+          >П. рукав</a
+        ></span
+      ><!--<![endif]-->
+    </td>
+    </tr>
+    </table>` : '';
+    const getPrinSize = (elem:string) => {
+      return elem.slice(elem.indexOf('Размер:')+8, elem.indexOf("см.")+2);
+    }
+    const one = frontPrint != '' ? 'грудь: '+getPrinSize(frontPrintStr)+', ':'';
+    const two = backPrint != '' ? 'спина: '+getPrinSize(backPrintStr)+', ':'';
+    const three = lsleevePrint != '' ? 'л.рукав: '+getPrinSize(lsleevePrintStr)+', ':'';
+    const four = rsleevePrint != '' ? 'п.рукав: '+getPrinSize(rsleevePrintStr)+'.':'';
+
+    const printingStr = one + two + three + four;
+
     return `<tr>
 <td
   align="left"
@@ -345,7 +734,7 @@ border-spacing: 0px;
       font-size: 14px;
     "
   >
-    Печать на: груди, формат А4 /
+    ${printingStr!=''?`Печать на: ${printingStr}`:''}
   </p>
   <p
     style="
@@ -551,6 +940,10 @@ border-spacing: 0px;
 </tr>
 </table>
 </td>
+<td
+class="es-hidden"
+style="padding: 0; margin: 0; width: 20px"
+></td>
 </tr>
 </table>
 <!--[if mso]></td><td style="width:20px"></td><td style="width:125px"><![endif]-->
@@ -564,7 +957,7 @@ mso-table-lspace: 0pt;
 mso-table-rspace: 0pt;
 border-collapse: collapse;
 border-spacing: 0px;
-float: right;
+float: left;
 "
 >
 <tr>
@@ -641,100 +1034,7 @@ float: left;
 align="left"
 style="padding: 0; margin: 0; width: 125px"
 >
-<table
-cellpadding="0"
-cellspacing="0"
-width="100%"
-role="presentation"
-style="
-mso-table-lspace: 0pt;
-mso-table-rspace: 0pt;
-border-collapse: collapse;
-border-spacing: 0px;
-"
->
-<tr>
-<td
-  align="center"
-  style="padding: 0; margin: 0"
->
-  <!--[if mso
-    ]><a href=${frontPrint} target="_blank" hidden>
-      <v:roundrect
-        xmlns:v="urn:schemas-microsoft-com:vml"
-        xmlns:w="urn:schemas-microsoft-com:office:word"
-        esdevVmlButton
-        href=""
-        style="
-          height: 40px;
-          v-text-anchor: middle;
-          width: 89px;
-        "
-        arcsize="50%"
-        strokecolor="#2cb543"
-        strokeweight="1px"
-        fillcolor="#00fd22"
-      >
-        <w:anchorlock></w:anchorlock>
-        <center
-          style="
-            color: #ffffff;
-            font-family: arial,
-              'helvetica neue', helvetica,
-              sans-serif;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 14px;
-            mso-text-raise: 1px;
-          "
-        >
-          Грудь
-        </center>
-      </v:roundrect></a
-    > <!
-  [endif]--><!--[if !mso]--><!-- --><span
-    class="es-button-border msohide"
-    style="
-      border-style: solid;
-      border-color: #2cb543;
-      background: #00fd22;
-      border-width: 0px 0px 2px 0px;
-      display: inline-block;
-      border-radius: 30px;
-      width: auto;
-      mso-hide: all;
-    "
-    ><a
-      href=${frontPrint}
-      class="es-button"
-      target="_blank"
-      style="
-        mso-style-priority: 100 !important;
-        text-decoration: none !important;
-        mso-line-height-rule: exactly;
-        color: #ffffff;
-        font-size: 18px;
-        padding: 10px 20px 10px 20px;
-        display: inline-block;
-        background: #00fd22;
-        border-radius: 30px;
-        font-family: arial, 'helvetica neue',
-          helvetica, sans-serif;
-        font-weight: normal;
-        font-style: normal;
-        line-height: 22px;
-        width: auto;
-        text-align: center;
-        letter-spacing: 0;
-        mso-padding-alt: 0;
-        mso-border-alt: 10px solid #00fd22;
-      "
-      >Грудь</a
-    ></span
-  ><!--<![endif]-->
-</td>
-</tr>
-</table>
+${frontPrintLink}
 </td>
 <td
 class="es-hidden"
@@ -761,100 +1061,7 @@ float: left;
 align="left"
 style="padding: 0; margin: 0; width: 125px"
 >
-<table
-cellpadding="0"
-cellspacing="0"
-width="100%"
-role="presentation"
-style="
-mso-table-lspace: 0pt;
-mso-table-rspace: 0pt;
-border-collapse: collapse;
-border-spacing: 0px;
-"
->
-<tr>
-<td
-  align="center"
-  style="padding: 0; margin: 0"
->
-  <!--[if mso
-    ]><a href=${backPrint} target="_blank" hidden>
-      <v:roundrect
-        xmlns:v="urn:schemas-microsoft-com:vml"
-        xmlns:w="urn:schemas-microsoft-com:office:word"
-        esdevVmlButton
-        href=""
-        style="
-          height: 40px;
-          v-text-anchor: middle;
-          width: 95px;
-        "
-        arcsize="50%"
-        strokecolor="#2cb543"
-        strokeweight="1px"
-        fillcolor="#00fd22"
-      >
-        <w:anchorlock></w:anchorlock>
-        <center
-          style="
-            color: #ffffff;
-            font-family: arial,
-              'helvetica neue', helvetica,
-              sans-serif;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 14px;
-            mso-text-raise: 1px;
-          "
-        >
-          Спина
-        </center>
-      </v:roundrect></a
-    > <!
-  [endif]--><!--[if !mso]--><!-- --><span
-    class="es-button-border msohide"
-    style="
-      border-style: solid;
-      border-color: #2cb543;
-      background: #00fd22;
-      border-width: 0px 0px 2px 0px;
-      display: inline-block;
-      border-radius: 30px;
-      width: auto;
-      mso-hide: all;
-    "
-    ><a
-      href=${backPrint}
-      class="es-button"
-      target="_blank"
-      style="
-        mso-style-priority: 100 !important;
-        text-decoration: none !important;
-        mso-line-height-rule: exactly;
-        color: #ffffff;
-        font-size: 18px;
-        padding: 10px 20px 10px 20px;
-        display: inline-block;
-        background: #00fd22;
-        border-radius: 30px;
-        font-family: arial, 'helvetica neue',
-          helvetica, sans-serif;
-        font-weight: normal;
-        font-style: normal;
-        line-height: 22px;
-        width: auto;
-        text-align: center;
-        letter-spacing: 0;
-        mso-padding-alt: 0;
-        mso-border-alt: 10px solid #00fd22;
-      "
-      >Спина</a
-    ></span
-  ><!--<![endif]-->
-</td>
-</tr>
-</table>
+${backPrintLink}
 </td>
 <td
 class="es-hidden"
@@ -881,100 +1088,11 @@ float: left;
 align="left"
 style="padding: 0; margin: 0; width: 125px"
 >
-<table
-cellpadding="0"
-cellspacing="0"
-width="100%"
-role="presentation"
-style="
-mso-table-lspace: 0pt;
-mso-table-rspace: 0pt;
-border-collapse: collapse;
-border-spacing: 0px;
-"
->
-<tr>
+${lsleevePrintLink}
 <td
-  align="center"
-  style="padding: 0; margin: 0"
->
-  <!--[if mso
-    ]><a href=${lsleevePrint} target="_blank" hidden>
-      <v:roundrect
-        xmlns:v="urn:schemas-microsoft-com:vml"
-        xmlns:w="urn:schemas-microsoft-com:office:word"
-        esdevVmlButton
-        href=""
-        style="
-          height: 40px;
-          v-text-anchor: middle;
-          width: 111px;
-        "
-        arcsize="50%"
-        strokecolor="#2cb543"
-        strokeweight="1px"
-        fillcolor="#00fd22"
-      >
-        <w:anchorlock></w:anchorlock>
-        <center
-          style="
-            color: #ffffff;
-            font-family: arial,
-              'helvetica neue', helvetica,
-              sans-serif;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 14px;
-            mso-text-raise: 1px;
-          "
-        >
-          Л. рукав
-        </center>
-      </v:roundrect></a
-    > <!
-  [endif]--><!--[if !mso]--><!-- --><span
-    class="es-button-border msohide"
-    style="
-      border-style: solid;
-      border-color: #2cb543;
-      background: #00fd22;
-      border-width: 0px 0px 2px 0px;
-      display: inline-block;
-      border-radius: 30px;
-      width: auto;
-      mso-hide: all;
-    "
-    ><a
-      href=${lsleevePrint}
-      class="es-button"
-      target="_blank"
-      style="
-        mso-style-priority: 100 !important;
-        text-decoration: none !important;
-        mso-line-height-rule: exactly;
-        color: #ffffff;
-        font-size: 18px;
-        padding: 10px 20px 10px 20px;
-        display: inline-block;
-        background: #00fd22;
-        border-radius: 30px;
-        font-family: arial, 'helvetica neue',
-          helvetica, sans-serif;
-        font-weight: normal;
-        font-style: normal;
-        line-height: 22px;
-        width: auto;
-        text-align: center;
-        letter-spacing: 0;
-        mso-padding-alt: 0;
-        mso-border-alt: 10px solid #00fd22;
-      "
-      >Л. рукав</a
-    ></span
-  ><!--<![endif]-->
-</td>
-</tr>
-</table>
+class="es-hidden"
+style="padding: 0; margin: 0; width: 20px"
+></td>
 </td>
 </tr>
 </table>
@@ -982,14 +1100,14 @@ border-spacing: 0px;
 <table
 cellpadding="0"
 cellspacing="0"
-class="es-right"
-align="right"
+class="es-left"
+align="left"
 style="
 mso-table-lspace: 0pt;
 mso-table-rspace: 0pt;
 border-collapse: collapse;
 border-spacing: 0px;
-float: right;
+float: left;
 "
 >
 <tr>
@@ -997,100 +1115,7 @@ float: right;
 align="left"
 style="padding: 0; margin: 0; width: 125px"
 >
-<table
-cellpadding="0"
-cellspacing="0"
-width="100%"
-role="presentation"
-style="
-mso-table-lspace: 0pt;
-mso-table-rspace: 0pt;
-border-collapse: collapse;
-border-spacing: 0px;
-"
->
-<tr>
-<td
-  align="center"
-  style="padding: 0; margin: 0"
->
-  <!--[if mso
-    ]><a href=${rsleevePrint} target="_blank" hidden>
-      <v:roundrect
-        xmlns:v="urn:schemas-microsoft-com:vml"
-        xmlns:w="urn:schemas-microsoft-com:office:word"
-        esdevVmlButton
-        href=""
-        style="
-          height: 40px;
-          v-text-anchor: middle;
-          width: 112px;
-        "
-        arcsize="50%"
-        strokecolor="#2cb543"
-        strokeweight="1px"
-        fillcolor="#00fd22"
-      >
-        <w:anchorlock></w:anchorlock>
-        <center
-          style="
-            color: #ffffff;
-            font-family: arial,
-              'helvetica neue', helvetica,
-              sans-serif;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 14px;
-            mso-text-raise: 1px;
-          "
-        >
-          П. рукав
-        </center>
-      </v:roundrect></a
-    > <!
-  [endif]--><!--[if !mso]--><!-- --><span
-    class="es-button-border msohide"
-    style="
-      border-style: solid;
-      border-color: #2cb543;
-      background: #00fd22;
-      border-width: 0px 0px 2px 0px;
-      display: inline-block;
-      border-radius: 30px;
-      width: auto;
-      mso-hide: all;
-    "
-    ><a
-      href=${rsleevePrint}
-      class="es-button"
-      target="_blank"
-      style="
-        mso-style-priority: 100 !important;
-        text-decoration: none !important;
-        mso-line-height-rule: exactly;
-        color: #ffffff;
-        font-size: 18px;
-        padding: 10px 20px 10px 20px;
-        display: inline-block;
-        background: #00fd22;
-        border-radius: 30px;
-        font-family: arial, 'helvetica neue',
-          helvetica, sans-serif;
-        font-weight: normal;
-        font-style: normal;
-        line-height: 22px;
-        width: auto;
-        text-align: center;
-        letter-spacing: 0;
-        mso-padding-alt: 0;
-        mso-border-alt: 10px solid #00fd22;
-      "
-      >П. рукав</a
-    ></span
-  ><!--<![endif]-->
-</td>
-</tr>
-</table>
+${rsleevePrintLink}
 </td>
 </tr>
 </table>
@@ -1374,6 +1399,11 @@ style="padding: 0; margin: 0; width: 20px"
         let backPrint = getPreview(elem.back_print);
         let lsleevePrint = getPreview(elem.lsleeve_print);
         let rsleevePrint = getPreview(elem.rsleeve_print);
+        let frontPrintStr = elem.front_print;
+        let backPrintStr = elem.back_print;
+        let lsleevePrintStr = elem.lsleeve_print;
+        let rsleevePrintStr = elem.rsleeve_print;
+
         product += itemTemplate(
           elem.name,
           elem.qtyAll,
@@ -1382,7 +1412,11 @@ style="padding: 0; margin: 0; width: 20px"
           frontPrint,
           backPrint,
           lsleevePrint,
-          rsleevePrint
+          rsleevePrint,
+          frontPrintStr,
+          backPrintStr,
+          lsleevePrintStr,
+          rsleevePrintStr,
         );
       } else {
         product += itemTemplateWithoutPrints(
@@ -2152,7 +2186,7 @@ style="padding: 0; margin: 0; width: 20px"
                                           font-size: 14px;
                                         "
                                       >
-                                        Стоимость заказа: ${total_price}
+                                        Стоимость заказа: ${total_price} Р
                                       </p>
                                      ${shippingPrice}
                                      ${shippingPromo}
