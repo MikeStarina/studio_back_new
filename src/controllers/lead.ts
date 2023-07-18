@@ -2,13 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import ServerError from "../utils/server-error-class";
 import lead from "../models/lead";
 import { sendMail } from "../utils/mailer";
+import { getCdekToken } from "../utils/cdek-token";
 
-
-
-
-
-
-export const createLead = async (req: Request, res: Response, next: NextFunction) => {
+export const createLead = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { name, phone } = await req.body;
 
   try {
@@ -16,13 +16,24 @@ export const createLead = async (req: Request, res: Response, next: NextFunction
 
     const payload = `Имя: ${name}, Телефон: ${phone}`;
 
-    sendMail({to: 'studio@pnhd.ru', subject: 'Новая заявка на звонок', payload})
+    // Код тут актуален до настройки роутов на сдек
+    // const cache = await getCdekToken();
+    // console.log(
+    //   cache,
+    //   "<< token from memory",
+    //   new Date().getHours(),
+    //   new Date().getMinutes()
+    // );
 
-    return await res.send({ message: 'заявка отправлена'}), newLead.save();
-  }
-  catch {
+    sendMail({
+      to: "studio@pnhd.ru",
+      subject: "Новая заявка на звонок",
+      payload,
+      html:'',
+    });
+
+    return await res.send({ message: "Заявка отправлена" }), newLead.save();
+  } catch {
     next(ServerError.error500());
   }
-
-
-}
+};
