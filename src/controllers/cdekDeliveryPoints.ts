@@ -18,8 +18,7 @@ export const cdekDeliveryPoints = async (
 
   try {
     await getCdekToken();
-    // const deliveryPoint = await fetch(`${CDEK_DELIVERY_POINTS_URL}?${url} `, {
-      const deliveryPoint = await fetch(`https://api.cdek.ru/v2/deliverypoints?${url} `, {
+    const deliveryPoint = await fetch(`${CDEK_DELIVERY_POINTS_URL}?${url} `, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${await getCdekToken()} `,

@@ -29,6 +29,7 @@ export const createLead = async (
       to: "studio@pnhd.ru",
       subject: "Новая заявка на звонок",
       payload,
+      html:'',
     });
 
     return await res.send({ message: "Заявка отправлена" }), newLead.save();
