@@ -31,7 +31,7 @@ export const createOrder = async (
     let newOrder;
     newOrder = await new order(data);
 
-    // console.log(newOrder);
+    console.log(newOrder);
 
     const receiptItems: any[] = [];
 
