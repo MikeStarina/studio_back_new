@@ -9,7 +9,7 @@ type TMailData = {
   to: string;
   subject: string;
   payload: string;
-  html: string;
+  html?: string;
 };
 
 export const sendMail = async (data: TMailData) => {

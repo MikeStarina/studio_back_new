@@ -132,7 +132,6 @@ interface IMailOrderdata{
   shipping_price: number;
   order_details: [
     {
-      //textile: mongoose.Schema.Types.ObjectId;
       textile: String;
       qty: [{
         name:string;

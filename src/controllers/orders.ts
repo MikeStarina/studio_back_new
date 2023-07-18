@@ -34,8 +34,6 @@ export const createOrder = async (
     let newOrder;
     newOrder = await new order(data);
 
-    // console.log(newOrder);
-
     const receiptItems: IReceiptItems[] = [];
 
     let allPrintPrice = 0;
@@ -47,7 +45,7 @@ export const createOrder = async (
         description: item.print ? item.name + " c печатью" : item.name,
         quantity: item.qtyAll,
         amount: {
-          value: item.isPrint?(item.item_price-item.printPrice)/item.qtyAll:item.item_price/item.qtyAll,
+          value: (item.item_price-item.printPrice)/item.qtyAll,
           currency: "RUB",
         },
         vat_code: "2",
@@ -73,7 +71,7 @@ export const createOrder = async (
       });
     }
 
-   if(data.isShipping){
+   if(data.isShipping && data.promocode != 'FREESHIPING'){
     receiptItems.push({
       description: "Доставка СДЕК",
       quantity: 1,
@@ -110,50 +108,28 @@ export const createOrder = async (
       },
     };
 
-    let mailData = {
-      owner_name: data.owner_name,
-      owner_phone: data.owner_phone,
-      owner_email: data.owner_email,
-      isShipping: data.isShipping,
-      shipping_city: data.shipping_city,
-      shipping_point: data.shipping_point,
-      total_price: data.total_price,
-      promocode: data.promocode,
-      discounted_price: data.discounted_price,
-      shipping_price: data.shipping_price,
-      order_details:data.order_details,
-    }
-    // const paymentUrl = await paymentRequest(paymentData);
-    // let payload = `Ваш заказ на сумму ${newOrder.discounted_price} Р. будет выполнен после оплаты.
-    // Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`;
 
-    // sendMail({ to: newOrder.owner_email, subject: `PNHD STUDIO | Заказ создан и ожидает оплаты`, payload});
+    const paymentUrl = await paymentRequest(paymentData);
+    let payload = `Ваш заказ на сумму ${newOrder.discounted_price} Р. будет выполнен после оплаты.
+    Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`;
 
-    // let staffPayload = {
-    //   to: 'studio@pnhd.ru',
-    //   subject: `Создан заказ ${newOrder._id} [не оплачено]`,
-    //   payload: `Заказчик: ${newOrder.owner_name}, телефон: ${newOrder.owner_phone}, сумма заказа: ${newOrder.discounted_price}`
-    // }
-
+    sendMail({ to: newOrder.owner_email, subject: `PNHD STUDIO | Заказ создан и ожидает оплаты`, payload});
 
     let staffPayload = {
-        to: 'test@gmail.com',
-        subject: `Создан заказ ${newOrder._id} [не оплачено] тест отправки письма`,
+        to: 'studio@pnhd.ru',
+        subject: `Создан заказ ${newOrder._id} [не оплачено]`,
         payload: `Заказчик: ${newOrder.owner_name}, телефон: ${newOrder.owner_phone}, сумма заказа: ${newOrder.discounted_price}`,
-        html: await orderClientTemplate(mailData),
       }
-        console.log(paymentData);
-        console.log(paymentData.receipt.items);
-      // console.log(receiptItems)
+
     sendMail(staffPayload);
 
 
     const orderId = newOrder._id;
     newOrder.save();
-    // return await res.send({ paymentUrl, id: newOrder._id });
+    return await res.send({ paymentUrl, id: newOrder._id });
   } catch {
     next(ServerError.error400());
-    //next(e.message);
+    // next(e.message);
   }
 };
 

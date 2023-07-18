@@ -9,7 +9,6 @@ export interface IOrder {
   promocode: string;
   discounted_price: number;
   shipping: string;
-  // shipping_adress: string; лишнее, не задействовано на фронте. Скорее всего уберется
   isShipping: boolean;
   shipping_city: {
     code: number;
@@ -92,7 +91,6 @@ export interface IOrder {
     {
       type: String;
       links: [];
-      //textile: mongoose.Schema.Types.ObjectId;
       textile: String;
       qty: [{
         name:string;
@@ -146,7 +144,6 @@ const orderSchema = new mongoose.Schema<IOrder>({
     required: false,
     default: "Самовывоз из студии",
   },
-  // shipping_adress: { type: String },
   isShipping: { type: Boolean, reuired: true },
   shipping_city: {
     code: { type: Number },
@@ -238,7 +235,6 @@ const orderSchema = new mongoose.Schema<IOrder>({
 
   links: [],
   type: {type:String},
-      //textile: mongoose.Schema.Types.ObjectId;
       textile: { type: String },
       qty: [{
         name:{ type: String },
