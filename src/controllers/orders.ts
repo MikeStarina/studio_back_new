@@ -71,7 +71,7 @@ export const createOrder = async (
       });
     }
 
-   if(data.isShipping && data.promocode != 'FREESHIPING'){
+   if(data.isShipping){
     receiptItems.push({
       description: "Доставка СДЕК",
       quantity: 1,
