@@ -115,14 +115,6 @@ export const createOrder = async (
 
     sendMail({ to: newOrder.owner_email, subject: `PNHD STUDIO | Заказ создан и ожидает оплаты`, payload});
 
-    let staffPayload = {
-        to: 'studio@pnhd.ru',
-        subject: `Создан заказ ${newOrder._id} [не оплачено]`,
-        payload: `Заказчик: ${newOrder.owner_name}, телефон: ${newOrder.owner_phone}, сумма заказа: ${newOrder.discounted_price}`,
-      }
-
-    sendMail(staffPayload);
-
 
     const orderId = newOrder._id;
     newOrder.save();
