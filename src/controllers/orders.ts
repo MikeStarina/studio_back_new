@@ -29,6 +29,7 @@ export const createOrder = async (
     shipping_point: orderData.shipping_point,
   };
 
+  let printingService = false;
   try {
     let newOrder;
     newOrder = await new order(data);
@@ -39,6 +40,9 @@ export const createOrder = async (
 
     let allPrintPrice = 0;
     orderData.items.forEach((item: IOrderItem) => {
+      if(item.printPrice > 0){
+        printingService = true;
+      }
       let newReceiptItem = {
         description: item.print ? item.name + " c печатью" : item.name,
         quantity: item.qtyAll,
@@ -55,17 +59,19 @@ export const createOrder = async (
       receiptItems.push(newReceiptItem);
     });
 
-    receiptItems.push({
-      description: "Услуги печати",
-      quantity: 1,
-      amount: {
-        value: allPrintPrice,
-        currency: "RUB",
-      },
-      vat_code: "2",
-      payment_mode: "full_prepayment",
-      payment_subject: "commodity",
-    });
+    if(printingService){
+      receiptItems.push({
+        description: "Услуги печати",
+        quantity: 1,
+        amount: {
+          value: allPrintPrice,
+          currency: "RUB",
+        },
+        vat_code: "2",
+        payment_mode: "full_prepayment",
+        payment_subject: "commodity",
+      });
+    }
 
    if(data.isShipping){
     receiptItems.push({
@@ -136,7 +142,8 @@ export const createOrder = async (
         payload: `Заказчик: ${newOrder.owner_name}, телефон: ${newOrder.owner_phone}, сумма заказа: ${newOrder.discounted_price}`,
         html: await orderClientTemplate(mailData),
       }
-
+        console.log(paymentData);
+        console.log(paymentData.receipt.items);
       // console.log(receiptItems)
     sendMail(staffPayload);
 
