@@ -8,7 +8,12 @@ interface IProduct {
     links: String[],
     type: String;
     price: Number;
-    weight: Number;
+    shippingParams: {
+      weight: Number;
+      width: Number;
+      length: Number;
+      depth: Number;
+    }
     stock: String;
     color: String;
     category: String;
@@ -47,9 +52,11 @@ const productSchema = new mongoose.Schema<IProduct>({
         type: Number,
         required: true,
     },
-    weight: {
-        type: Number,
-        required: true,
+    shippingParams: {
+        weight: {type: Number, required: true},
+        width: {type: Number, required: true},
+        length: {type: Number, required: true},
+        depth: {type: Number, required: true},
     },
     stock: {
       type: String,
