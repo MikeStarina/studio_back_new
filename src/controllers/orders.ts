@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express";
+import { orderClientTemplate } from "../template/orderClientTemplate";
 import order from "../models/order";
 import { sendMail } from "../utils/mailer";
 import { paymentRequest } from "../utils/payment";
 import ServerError from "../utils/server-error-class";
+import { IReceiptItems,IOrderItem } from "types/orders";
 
 export const createOrder = async (
   req: Request,
@@ -27,18 +29,20 @@ export const createOrder = async (
     shipping_point: orderData.shipping_point,
   };
 
+  let printingService = false;
   try {
     let newOrder;
     newOrder = await new order(data);
 
-    console.log(newOrder);
-
-    const receiptItems: any[] = [];
+    const receiptItems: IReceiptItems[] = [];
 
     let allPrintPrice = 0;
-    orderData.items.forEach((item: any, index: number) => {
+    orderData.items.forEach((item: IOrderItem) => {
+      if(item.printPrice > 0){
+        printingService = true;
+      }
       let newReceiptItem = {
-        description: item.print ? item.textile + " c печатью" : item.textile,
+        description: item.print ? item.name + " c печатью" : item.name,
         quantity: item.qtyAll,
         amount: {
           value: (item.item_price-item.printPrice)/item.qtyAll,
@@ -53,18 +57,21 @@ export const createOrder = async (
       receiptItems.push(newReceiptItem);
     });
 
-    receiptItems.push({
-      description: "Услуги печати",
-      quantity: 1,
-      amount: {
-        value: allPrintPrice,
-        currency: "RUB",
-      },
-      vat_code: "2",
-      payment_mode: "full_prepayment",
-      payment_subject: "commodity",
-    });
+    if(printingService){
+      receiptItems.push({
+        description: "Услуги печати",
+        quantity: 1,
+        amount: {
+          value: allPrintPrice,
+          currency: "RUB",
+        },
+        vat_code: "2",
+        payment_mode: "full_prepayment",
+        payment_subject: "commodity",
+      });
+    }
 
+   if(data.isShipping){
     receiptItems.push({
       description: "Доставка СДЕК",
       quantity: 1,
@@ -76,6 +83,7 @@ export const createOrder = async (
       payment_mode: "full_prepayment",
       payment_subject: "commodity",
     });
+   }
 
     const paymentData = {
       amount: {
@@ -100,28 +108,20 @@ export const createOrder = async (
       },
     };
 
-    console.log(receiptItems);
-    // const paymentUrl = await paymentRequest(paymentData);
-    // let payload = `Ваш заказ на сумму ${newOrder.discounted_price} Р. будет выполнен после оплаты.
-    // Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`;
 
-    // sendMail({ to: newOrder.owner_email, subject: `PNHD STUDIO | Заказ создан и ожидает оплаты`, payload});
+    const paymentUrl = await paymentRequest(paymentData);
+    let payload = `Ваш заказ на сумму ${newOrder.discounted_price} Р. будет выполнен после оплаты.
+    Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`;
 
-    // let staffPayload = {
-    //   to: 'studio@pnhd.ru',
-    //   subject: `Создан заказ ${newOrder._id} [не оплачено]`,
-    //   payload: `Заказчик: ${newOrder.owner_name}, телефон: ${newOrder.owner_phone}, сумма заказа: ${newOrder.discounted_price}`
-    // }
+    sendMail({ to: newOrder.owner_email, subject: `PNHD STUDIO | Заказ создан и ожидает оплаты`, payload});
 
-    // sendMail(staffPayload);
 
     const orderId = newOrder._id;
     newOrder.save();
-    // return await res.send({ paymentUrl, id: newOrder._id });
-    // return await res.send({ newOrder });
+    return await res.send({ paymentUrl, id: newOrder._id });
   } catch {
     next(ServerError.error400());
-    //next(e.message);
+    // next(e.message);
   }
 };
 
