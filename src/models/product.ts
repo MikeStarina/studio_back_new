@@ -130,3 +130,20 @@ export default mongoose.model<IProduct>('product', productSchema);
 }
 
 */
+
+/*
+  "shippingParams": {
+    "weight": 300,
+    "width": 22,
+    "length": 16,
+    "depth": 8
+  },
+
+
+  "shippingParams": {
+    "weight": 900,
+    "width": 32,
+    "length": 22,
+    "depth": 10
+  },
+*/
