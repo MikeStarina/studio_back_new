@@ -22,8 +22,6 @@ export const getCdekToken = async () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Host": '',
-            "Content-Length": '',
           },
         }
       );
