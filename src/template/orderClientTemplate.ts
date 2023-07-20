@@ -121,6 +121,17 @@ style="
     }
     return preview;
   };
+  const getPrintFile = (item: string) => {
+    let file =
+      "";
+    if (item != "") {
+      file = item.slice(
+        item.indexOf("Файл: ") + 6,
+        item.indexOf(", Превью:")
+      );
+    }
+    return file;
+  };
   const itemTemplate = (
     name: string,
     qtyAll: number,
@@ -134,8 +145,12 @@ style="
     backPrintStr: string,
     lsleevePrintStr: string,
     rsleevePrintStr: string,
+    frontPrintFile: string,
+    backPrintFile: string,
+    lsleevePrintFile: string,
+    rsleevePrintFile: string
   ) => {
-    const frontPrintLink = frontPrint != "" ? `<table
+    const frontPrintLink = frontPrintFile != "" ? `<table
     cellpadding="0"
     cellspacing="0"
     width="100%"
@@ -153,7 +168,7 @@ style="
       style="padding: 0; margin: 0"
     >
       <!--[if mso
-        ]><a href=${frontPrint} target="_blank" hidden>
+        ]><a href=${frontPrintFile} target="_blank" hidden>
           <v:roundrect
             xmlns:v="urn:schemas-microsoft-com:vml"
             xmlns:w="urn:schemas-microsoft-com:office:word"
@@ -199,7 +214,7 @@ style="
           mso-hide: all;
         "
         ><a
-          href=${frontPrint}
+          href=${frontPrintFile}
           class="es-button"
           target="_blank"
           style="
@@ -229,7 +244,7 @@ style="
     </td>
     </tr>
     </table>`: '';
-    const backPrintLink = backPrint != "" ? `<table
+    const backPrintLink = backPrintFile != "" ? `<table
     cellpadding="0"
     cellspacing="0"
     width="100%"
@@ -247,7 +262,7 @@ style="
       style="padding: 0; margin: 0"
     >
       <!--[if mso
-        ]><a href=${backPrint} target="_blank" hidden>
+        ]><a href=${backPrintFile} target="_blank" hidden>
           <v:roundrect
             xmlns:v="urn:schemas-microsoft-com:vml"
             xmlns:w="urn:schemas-microsoft-com:office:word"
@@ -293,7 +308,7 @@ style="
           mso-hide: all;
         "
         ><a
-          href=${backPrint}
+          href=${backPrintFile}
           class="es-button"
           target="_blank"
           style="
@@ -323,7 +338,7 @@ style="
     </td>
     </tr>
     </table>`: '';
-    const lsleevePrintLink = lsleevePrint != "" ? `<table
+    const lsleevePrintLink = lsleevePrintFile != "" ? `<table
     cellpadding="0"
     cellspacing="0"
     width="100%"
@@ -341,7 +356,7 @@ style="
       style="padding: 0; margin: 0"
     >
       <!--[if mso
-        ]><a href=${lsleevePrint} target="_blank" hidden>
+        ]><a href=${lsleevePrintFile} target="_blank" hidden>
           <v:roundrect
             xmlns:v="urn:schemas-microsoft-com:vml"
             xmlns:w="urn:schemas-microsoft-com:office:word"
@@ -387,7 +402,7 @@ style="
           mso-hide: all;
         "
         ><a
-          href=${lsleevePrint}
+          href=${lsleevePrintFile}
           class="es-button"
           target="_blank"
           style="
@@ -417,7 +432,7 @@ style="
     </td>
     </tr>
     </table>` : '';
-    const rsleevePrintLink = rsleevePrint != "" ? `<table
+    const rsleevePrintLink = rsleevePrintFile != "" ? `<table
     cellpadding="0"
     cellspacing="0"
     width="100%"
@@ -435,7 +450,7 @@ style="
       style="padding: 0; margin: 0"
     >
       <!--[if mso
-        ]><a href=${rsleevePrint} target="_blank" hidden>
+        ]><a href=${rsleevePrintFile} target="_blank" hidden>
           <v:roundrect
             xmlns:v="urn:schemas-microsoft-com:vml"
             xmlns:w="urn:schemas-microsoft-com:office:word"
@@ -481,7 +496,7 @@ style="
           mso-hide: all;
         "
         ><a
-          href=${rsleevePrint}
+          href=${rsleevePrintFile}
           class="es-button"
           target="_blank"
           style="
@@ -1403,6 +1418,11 @@ style="padding: 0; margin: 0; width: 20px"
         let backPrintStr = elem.back_print;
         let lsleevePrintStr = elem.lsleeve_print;
         let rsleevePrintStr = elem.rsleeve_print;
+        let frontPrintFile = getPrintFile(elem.front_print);
+        let backPrintFile = getPrintFile(elem.back_print);
+        let lsleevePrintFile = getPrintFile(elem.lsleeve_print);
+        let rsleevePrintFile = getPrintFile(elem.rsleeve_print);
+
 
         product += itemTemplate(
           elem.name,
@@ -1417,6 +1437,10 @@ style="padding: 0; margin: 0; width: 20px"
           backPrintStr,
           lsleevePrintStr,
           rsleevePrintStr,
+          frontPrintFile,
+          backPrintFile,
+          lsleevePrintFile,
+          rsleevePrintFile
         );
       } else {
         product += itemTemplateWithoutPrints(
