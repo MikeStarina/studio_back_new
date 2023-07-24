@@ -98,6 +98,7 @@ export const createOrder = async (
         customer: {
           full_name: newOrder.owner_name,
           phone: newOrder.owner_phone,
+          email: newOrder.owner_email
         },
         items: receiptItems,
       },
