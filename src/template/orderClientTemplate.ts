@@ -32,7 +32,7 @@ export const orderClientTemplate = (data: IMailOrderdata) => {
   </p>`
     : "";
   const shipping = isShipping ? "Доставка СДЭК (до ПВЗ)" : "Самовывоз из студии";
-
+  const freeShipping = data.promocode === 'FREESHIPPING'? true:false;
   const shippingPrice = isShipping
     ? ` <p
   style="
@@ -2188,7 +2188,7 @@ style="padding: 0; margin: 0; width: 20px"
                                       >
                                         Стоимость заказа: ${total_price} Р
                                       </p>
-                                     ${shippingPrice}
+                                     ${!freeShipping?shippingPrice:``}
                                      ${shippingPromo}
                                      ${discountedPrice}
                                     </td>
