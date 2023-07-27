@@ -14,28 +14,26 @@ const clearImage = () => {
   }, timeStartInterval);
 
   const interval = () => {
-    // При запуска ф-ции проверяем дату, чистим файлы при совпадении
-    if (new Date().getDate().toString() === "28") {
-      getFilesAndDelete();
-    }
     // Запуск интервала
     setInterval(async () => {
-      const date = new Date().getMinutes();
-      if (new Date().getDate().toString() === "28") {
-        getFilesAndDelete();
-      }
+      getFilesAndDelete();
     }, timeIntervalClear);
   };
 
   // Удаление файлов
   function getFilesAndDelete() {
+    const date = new Date().getDate();
+    const month = new Date().getMonth() === 1 ? 12 : new Date().getMonth();
+    const day = `${month}${date}`;
+
     fs.readdirSync("src/public/uploads/").forEach((file) => {
-      console.log(file);
-      fs.rm(`./src/public/uploads/${file}`, { recursive: true }, (err) => {
-        if (err) {
-          throw new Error("Error: File did not delete ");
-        }
-      });
+      if (file.includes(`-${day}`)) {
+        fs.rm(`./src/public/uploads/${file}`, { recursive: true }, (err) => {
+          if (err) {
+            throw new Error("Error: File did not delete ");
+          }
+        });
+      }
     });
   }
 
