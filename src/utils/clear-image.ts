@@ -2,43 +2,48 @@ import * as fs from "fs";
 import path from "path";
 
 const clearImage = () => {
-  const way = path.resolve(`src/public/uploads/`);
-  // getCurrentFilenames();
+  const time = 24 - new Date().getHours();
+  // Таймер до 2 ночи
+  const timeStartInterval = (time + 2) * 3600 * 1000;
+  // Интервал 24 часа
+  const timeIntervalClear = 86400000;
 
-  // fs.rm('./dummy.txt', { recursive: true }, (err) => {
-  //   if (err) {
-  //     // File deletion failed
-  //     console.error(err.message);
-  //     return;
-  //   }
-  //   console.log("File deleted successfully");
-  //
-  //   // List files after deleting
-  //   getCurrentFilenames();
-  // })
+  // Запускаем таймер отчет до 2 ночи
+  const timer = setTimeout(() => {
+    clearTimer();
+  }, timeStartInterval);
 
-  // This will list all files in current directory
-  function getCurrentFilenames() {
-    console.log("\nCurrent filenames:");
-    // if (fs.readdirSync(way).length > 2) {
-    //   fs.readdirSync(way).forEach((file) => {
-    //     console.log(file);
-    //   });
-    // }
+  const interval = () => {
+    // При запуска ф-ции проверяем дату, чистим файлы при совпадении
+    if (new Date().getDate().toString() === "28") {
+      getFilesAndDelete();
+    }
+    // Запуск интервала
+    setInterval(async () => {
+      const date = new Date().getMinutes();
+      if (new Date().getDate().toString() === "28") {
+        getFilesAndDelete();
+      }
+    }, timeIntervalClear);
+  };
 
-    console.log("");
+  // Удаление файлов
+  function getFilesAndDelete() {
+    fs.readdirSync("src/public/uploads/").forEach((file) => {
+      console.log(file);
+      fs.rm(`./src/public/uploads/${file}`, { recursive: true }, (err) => {
+        if (err) {
+          throw new Error("Error: File did not delete ");
+        }
+      });
+    });
   }
-  // fs.rm("./src/public/uploads", { recursive: true }, (err) => {
-  //   if (err) {
-  //     console.error(err);
-  //   }
-  //   else {
-  //     console.log("Recursive: Directory Deleted!");
-  //
-  //     // List files after delete
-  //     getCurrentFilenames();
-  //   }
-  // });
+
+  // Запуск Интервала и размонтировываем таймер
+  function clearTimer() {
+    interval();
+    clearTimeout(timer);
+  }
 };
 
 export default clearImage;
