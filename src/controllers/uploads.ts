@@ -28,7 +28,7 @@ export const uploadFunc = async (
     const date = new Date().getDate() === 31 ? 30 : new Date().getDate();
     const month = new Date().getMonth() + 1;
     const day = `${month}${date}`;
-    console.log(new Date().getMonth());
+
     const newFilename = `${crypto.randomUUID()}-${day}${fileExt}`;
 
     const filePath = path.resolve(`src/public/uploads/${newFilename}`);

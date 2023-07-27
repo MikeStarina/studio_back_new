@@ -27,13 +27,13 @@ const clearImage = () => {
     const day = `${month}${date}`;
 
     fs.readdirSync("src/public/uploads/").forEach((file) => {
-      if (file.includes(`-${day}`)) {
-        fs.rm(`./src/public/uploads/${file}`, { recursive: true }, (err) => {
-          if (err) {
-            throw new Error("Error: File did not delete ");
-          }
-        });
-      }
+      // if (file.includes(`-${day}`)) {
+      fs.rm(`./src/public/uploads/${file}`, { recursive: true }, (err) => {
+        if (err) {
+          throw new Error("Error: File did not delete ");
+        }
+      });
+      // }
     });
   }
 
