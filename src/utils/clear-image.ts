@@ -23,7 +23,7 @@ const clearImage = () => {
   // Удаление файлов
   function getFilesAndDelete() {
     const date = new Date().getDate();
-    const month = new Date().getMonth() === 1 ? 12 : new Date().getMonth();
+    const month = new Date().getMonth() === 0 ? 12 : new Date().getMonth();
     const day = `${month}${date}`;
 
     fs.readdirSync("src/public/uploads/").forEach((file) => {
