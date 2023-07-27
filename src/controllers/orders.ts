@@ -30,7 +30,7 @@ export const createOrder = async (
   };
 
   let printingService = false;
-  const freeShipping = data.promocode === 'FREESHIPPING'? true:false;
+  const freeShipping = data.promocode.mechanic === 'freeShipping'? true:false;
 
   try {
     let newOrder;
