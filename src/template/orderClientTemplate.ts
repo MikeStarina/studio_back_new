@@ -32,7 +32,7 @@ export const orderClientTemplate = (data: IMailOrderdata) => {
   </p>`
     : "";
   const shipping = isShipping ? "Доставка СДЭК (до ПВЗ)" : "Самовывоз из студии";
-
+  const freeShipping = data.promocode.mechanic === 'freeShipping'? true:false;
   const shippingPrice = isShipping
     ? ` <p
   style="
@@ -65,7 +65,7 @@ style="
     : ``;
 
   const shippingPromo =
-    promocode != ""
+    promocode.name != ""
       ? `<p
 style="
   margin: 0;
@@ -78,12 +78,12 @@ style="
   font-size: 14px;
 "
 >
-Промокод: ${promocode}
+Промокод: ${promocode.name}
 </p>`
       : ``;
 
   const discountedPrice =
-    promocode != ""
+    promocode.name != ""
       ? `<p
 style="
   margin: 0;
@@ -2212,7 +2212,7 @@ style="padding: 0; margin: 0; width: 20px"
                                       >
                                         Стоимость заказа: ${total_price} Р
                                       </p>
-                                     ${shippingPrice}
+                                     ${!freeShipping?shippingPrice:``}
                                      ${shippingPromo}
                                      ${discountedPrice}
                                     </td>
