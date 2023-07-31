@@ -5,8 +5,6 @@ import { sendMail } from "../utils/mailer";
 import { paymentRequest } from "../utils/payment";
 import ServerError from "../utils/server-error-class";
 import { IReceiptItems, IOrderItem } from "types/orders";
-import mongoose from "mongoose";
-import { Schema } from "inspector";
 
 export const createOrder = async (
   req: Request,
@@ -38,9 +36,6 @@ export const createOrder = async (
   try {
     let newOrder;
     newOrder = await new Order(data);
-    const noStringId = newOrder._id;
-    const id = noStringId.toString();
-    // const id = "64c7cbd968150f64c054c7b9";
 
     const receiptItems: IReceiptItems[] = [];
 
