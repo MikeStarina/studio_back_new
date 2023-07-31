@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { orderClientTemplate } from "../template/orderClientTemplate";
-import order from "../models/order";
+import Order from "../models/order";
 import { sendMail } from "../utils/mailer";
 import { paymentRequest } from "../utils/payment";
 import ServerError from "../utils/server-error-class";
-import { IReceiptItems,IOrderItem } from "types/orders";
+import { IReceiptItems, IOrderItem } from "types/orders";
+import mongoose from "mongoose";
+import { Schema } from "inspector";
 
 export const createOrder = async (
   req: Request,
@@ -30,24 +32,28 @@ export const createOrder = async (
   };
 
   let printingService = false;
-  const freeShipping = data.promocode.mechanic === 'freeShipping'? true:false;
+  const freeShipping =
+    data.promocode.mechanic === "freeShipping" ? true : false;
 
   try {
     let newOrder;
-    newOrder = await new order(data);
+    newOrder = await new Order(data);
+    const noStringId = newOrder._id;
+    const id = noStringId.toString();
+    // const id = "64c7cbd968150f64c054c7b9";
 
     const receiptItems: IReceiptItems[] = [];
 
     let allPrintPrice = 0;
     orderData.items.forEach((item: IOrderItem) => {
-      if(item.printPrice > 0){
+      if (item.printPrice > 0) {
         printingService = true;
       }
       let newReceiptItem = {
         description: item.print ? item.name + " c печатью" : item.name,
         quantity: item.qtyAll,
         amount: {
-          value: (item.item_price-item.printPrice)/item.qtyAll,
+          value: (item.item_price - item.printPrice) / item.qtyAll,
           currency: "RUB",
         },
         vat_code: "2",
@@ -59,7 +65,7 @@ export const createOrder = async (
       receiptItems.push(newReceiptItem);
     });
 
-    if(printingService){
+    if (printingService) {
       receiptItems.push({
         description: "Услуги печати",
         quantity: 1,
@@ -73,21 +79,21 @@ export const createOrder = async (
       });
     }
 
-   if(data.isShipping){
-    if(!freeShipping){
-      receiptItems.push({
-        description: "Доставка СДЕК",
-        quantity: 1,
-        amount: {
-          value: data.shipping_price,
-          currency: "RUB",
-        },
-        vat_code: "2",
-        payment_mode: "full_prepayment",
-        payment_subject: "commodity",
-      });
+    if (data.isShipping) {
+      if (!freeShipping) {
+        receiptItems.push({
+          description: "Доставка СДЕК",
+          quantity: 1,
+          amount: {
+            value: data.shipping_price,
+            currency: "RUB",
+          },
+          vat_code: "2",
+          payment_mode: "full_prepayment",
+          payment_subject: "commodity",
+        });
+      }
     }
-   }
 
     const paymentData = {
       amount: {
@@ -102,7 +108,7 @@ export const createOrder = async (
         customer: {
           full_name: newOrder.owner_name,
           phone: newOrder.owner_phone,
-          email: newOrder.owner_email
+          email: newOrder.owner_email,
         },
         items: receiptItems,
       },
@@ -113,17 +119,22 @@ export const createOrder = async (
       },
     };
 
-
-    const paymentUrl = await paymentRequest(paymentData);
-    let payload = `Ваш заказ на сумму ${newOrder.discounted_price} Р. будет выполнен после оплаты.
+    newOrder.save(async function (err, newOrderSave) {
+      if (err) {
+        throw new Error("don not save in BD");
+      } else {
+        const paymentUrl = await paymentRequest(paymentData);
+        let payload = `Ваш заказ на сумму ${newOrderSave.discounted_price} Р. будет выполнен после оплаты.
     Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`;
 
-    sendMail({ to: newOrder.owner_email, subject: `PNHD STUDIO | Заказ создан и ожидает оплаты`, payload});
-
-
-    const orderId = newOrder._id;
-    newOrder.save();
-    return await res.send({ paymentUrl, id: newOrder._id });
+        await sendMail({
+          to: newOrderSave.owner_email,
+          subject: `PNHD STUDIO | Заказ создан и ожидает оплаты`,
+          payload,
+        });
+        return res.send({ paymentUrl, id: newOrderSave._id });
+      }
+    });
   } catch {
     next(ServerError.error400());
     // next(e.message);
