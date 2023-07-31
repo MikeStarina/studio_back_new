@@ -127,15 +127,7 @@ interface IMailOrderdata{
     fulfillment: boolean;
   };
   total_price: number;
-  promocode: {
-    discount_ratio:number;
-    discounted_item: string;
-    mechanic: string;
-    message: string;
-    name: string;
-    qty:number;
-    _id: string;
-  };
+  promocode: string;
   discounted_price: number;
   shipping_price: number;
   order_details: [

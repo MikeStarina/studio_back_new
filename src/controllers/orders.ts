@@ -30,8 +30,6 @@ export const createOrder = async (
   };
 
   let printingService = false;
-  const freeShipping = data.promocode.mechanic === 'freeShipping'? true:false;
-
   try {
     let newOrder;
     newOrder = await new order(data);
@@ -74,19 +72,17 @@ export const createOrder = async (
     }
 
    if(data.isShipping){
-    if(!freeShipping){
-      receiptItems.push({
-        description: "Доставка СДЕК",
-        quantity: 1,
-        amount: {
-          value: data.shipping_price,
-          currency: "RUB",
-        },
-        vat_code: "2",
-        payment_mode: "full_prepayment",
-        payment_subject: "commodity",
-      });
-    }
+    receiptItems.push({
+      description: "Доставка СДЕК",
+      quantity: 1,
+      amount: {
+        value: data.shipping_price,
+        currency: "RUB",
+      },
+      vat_code: "2",
+      payment_mode: "full_prepayment",
+      payment_subject: "commodity",
+    });
    }
 
     const paymentData = {

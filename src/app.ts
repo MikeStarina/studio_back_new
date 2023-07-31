@@ -15,7 +15,6 @@ import fileUpload from "express-fileupload";
 import dotenv from "dotenv";
 import { errors } from "celebrate";
 import { getCdekToken } from "./utils/cdek-token";
-import clearImage from "./utils/clear-image";
 
 const ENV = dotenv.config();
 
@@ -53,7 +52,7 @@ mongoose.set("strictQuery", true);
 mongoose.connect(DBURL, { dbName: "studio" });
 
 app.use(requestLogger);
-(() => clearImage())();
+
 (async () => await getCdekToken())();
 
 app.use("/api/shipping", shippingRouter);

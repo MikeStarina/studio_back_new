@@ -6,15 +6,7 @@ export interface IOrder {
   owner_phone: string;
   owner_email: string;
   total_price: number;
-  promocode: {
-    discount_ratio:number;
-    discounted_item: string;
-    mechanic: string;
-    message: string;
-    name: string;
-    qty:number;
-    _id: string;
-  };
+  promocode: string;
   discounted_price: number;
   shipping: string;
   isShipping: boolean;
@@ -144,15 +136,7 @@ const orderSchema = new mongoose.Schema<IOrder>({
   owner_phone: { type: String, required: false },
   owner_email: { type: String, required: false },
   total_price: { type: Number, required: false },
-  promocode: {
-    discount_ratio:{ type: Number },
-    discounted_item: { type: String },
-    mechanic: { type: String },
-    message: { type: String },
-    name: { type: String },
-    qty:{ type: Number },
-    _id: { type: String },
-  },
+  promocode: { type: String },
   discounted_price: { type: Number },
   shipping: {
     type: String,
