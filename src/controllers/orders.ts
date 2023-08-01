@@ -116,9 +116,7 @@ export const createOrder = async (
 
     newOrder.save(async function (err, newOrderSave) {
       if (err) {
-        return res
-          .status(400)
-          .send({ success: false, message: "create Order false" });
+        return err;
       } else {
         const paymentUrl = await paymentRequest(paymentData);
         let payload = `Ваш заказ на сумму ${newOrderSave.discounted_price} Р. будет выполнен после оплаты.
