@@ -116,7 +116,9 @@ export const createOrder = async (
 
     newOrder.save(async function (err, newOrderSave) {
       if (err) {
-        throw new Error("don not save in BD");
+        return res
+          .status(400)
+          .send({ success: false, message: "create Order false" });
       } else {
         const paymentUrl = await paymentRequest(paymentData);
         let payload = `Ваш заказ на сумму ${newOrderSave.discounted_price} Р. будет выполнен после оплаты.
