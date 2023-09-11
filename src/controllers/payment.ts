@@ -1,20 +1,17 @@
 import { NextFunction, Request, Response } from "express"
+import mongoose from "mongoose";
 import { orderClientTemplate } from "../template/orderClientTemplate";
 import order from "../models/order";
+import product from "../models/product";
 import { sendMail } from "../utils/mailer";
 import ServerError from "../utils/server-error-class";
 
-
 export const getPaymentConfirmation = async (req: Request, res: Response, next: NextFunction) => {
-
-
-
   const { object } = req.body;
   const id = object.metadata.id;
-
-
   try {
     const currentOrder = await order.findOne({ _id: id });
+
 
     currentOrder!.isPayed = true;
     currentOrder!.order_status = 'pending';
@@ -46,16 +43,32 @@ export const getPaymentConfirmation = async (req: Request, res: Response, next: 
     })
 
     const staffMailData = {
-      to: 'studio@pnhd.ru',
+      // to: 'studio@pnhd.ru',
+      to: 'fallenarh@gmail.com',
       subject: `Новый заказ ${currentOrder!._id}` ,
       payload: order_details_string,
       html: await orderClientTemplate(mailData)
     };
 
-    await sendMail(userMailData) //письмо клиенту
+    //1 await sendMail(userMailData) //письмо клиенту
     await sendMail(staffMailData) //письмо наше
 
     await currentOrder!.save();
+    const t = currentOrder?.order_details
+    await t?.forEach(async (item)=>{
+      // console.log(item.qty)
+      const currentProduct = await product.findById(item._id);
+      if(!currentProduct){
+        throw ServerError.error400(
+          "Неверный id товара."
+        );
+      }
+      let updateSizes = currentProduct?.sizes;
+      for(let i = 0; i<updateSizes!.length; i++){
+       updateSizes![i].qty = updateSizes![i].qty - item.qty[i].qty
+      }
+      await product.findByIdAndUpdate(item._id, {sizes: updateSizes});
+    })
   }
   catch {
     next(ServerError.error500())
@@ -63,5 +76,5 @@ export const getPaymentConfirmation = async (req: Request, res: Response, next: 
   }
 
 
-  res.status(200).send({ message: 'ok' });
+  // res.status(200).send({ message: 'ok' });
 }
