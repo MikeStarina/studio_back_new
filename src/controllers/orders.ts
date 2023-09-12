@@ -29,6 +29,7 @@ export const createOrder = async (
     packages: orderData.packages,
     shipping_price: orderData.shipping_price,
     shipping_point: orderData.shipping_point,
+    shipping: orderData.isShipping ? 'Доставка по РФ' : 'Самовывоз из студии',
   };
 
   let printingService = false;
