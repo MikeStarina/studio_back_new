@@ -121,16 +121,15 @@ export const createOrder = async (
       if (err) {
         return err;
       } else {
-    //     const paymentUrl = await paymentRequest(paymentData);
-    const paymentUrl = 'zzz';
+        const paymentUrl = await paymentRequest(paymentData);
         let payload = `Ваш заказ на сумму ${newOrderSave.discounted_price} Р. будет выполнен после оплаты.
     Дублируем ссылку на оплату на всякий случай: paymentUrl`;
 
-    //     await sendMail({
-    //       to: newOrderSave.owner_email,
-    //       subject: `PNHD STUDIO | Заказ создан и ожидает оплаты`,
-    //       payload,
-    //     });
+        await sendMail({
+          to: newOrderSave.owner_email,
+          subject: `PNHD STUDIO | Заказ создан и ожидает оплаты`,
+          payload,
+        });
         return res.send({ paymentUrl, id: newOrderSave._id });
       }
     });

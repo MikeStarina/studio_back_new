@@ -7,11 +7,15 @@ import ServerError from "../utils/server-error-class";
 import { editResiduals } from "../utils/edit-resuduals";
 
 export const getPaymentConfirmation = async (req: Request, res: Response, next: NextFunction) => {
+
+
+
   const { object } = req.body;
   const id = object.metadata.id;
+
+
   try {
     const currentOrder = await order.findOne({ _id: id });
-
 
     currentOrder!.isPayed = true;
     currentOrder!.order_status = 'pending';
@@ -43,14 +47,13 @@ export const getPaymentConfirmation = async (req: Request, res: Response, next: 
     })
 
     const staffMailData = {
-      // to: 'studio@pnhd.ru',
-      to: 'fallenarh@gmail.com',
+      to: 'studio@pnhd.ru',
       subject: `Новый заказ ${currentOrder!._id}` ,
       payload: order_details_string,
       html: await orderClientTemplate(mailData)
     };
 
-    //1 await sendMail(userMailData) //письмо клиенту
+    await sendMail(userMailData) //письмо клиенту
     await sendMail(staffMailData) //письмо наше
 
     await currentOrder!.save();
@@ -63,5 +66,5 @@ export const getPaymentConfirmation = async (req: Request, res: Response, next: 
   }
 
 
-  // res.status(200).send({ message: 'ok' });
+  res.status(200).send({ message: 'ok' });
 }
