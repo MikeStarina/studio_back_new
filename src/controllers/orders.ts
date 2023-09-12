@@ -123,7 +123,7 @@ export const createOrder = async (
       } else {
         const paymentUrl = await paymentRequest(paymentData);
         let payload = `Ваш заказ на сумму ${newOrderSave.discounted_price} Р. будет выполнен после оплаты.
-    Дублируем ссылку на оплату на всякий случай: paymentUrl`;
+    Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`;
 
         await sendMail({
           to: newOrderSave.owner_email,
