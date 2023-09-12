@@ -11,7 +11,7 @@ interface IReceiptItems{
 }
 
 interface IOrderItem {
-      textile: String;
+      textile: string;
       qty: [{
         name:string;
         qty: number;

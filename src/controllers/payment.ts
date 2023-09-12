@@ -5,6 +5,7 @@ import order from "../models/order";
 import product from "../models/product";
 import { sendMail } from "../utils/mailer";
 import ServerError from "../utils/server-error-class";
+import { editResiduals } from "../utils/edit-resuduals";
 
 export const getPaymentConfirmation = async (req: Request, res: Response, next: NextFunction) => {
   const { object } = req.body;
@@ -54,21 +55,22 @@ export const getPaymentConfirmation = async (req: Request, res: Response, next: 
     await sendMail(staffMailData) //письмо наше
 
     await currentOrder!.save();
-    const t = currentOrder?.order_details
-    await t?.forEach(async (item)=>{
-      // console.log(item.qty)
-      const currentProduct = await product.findById(item._id);
-      if(!currentProduct){
-        throw ServerError.error400(
-          "Неверный id товара."
-        );
-      }
-      let updateSizes = currentProduct?.sizes;
-      for(let i = 0; i<updateSizes!.length; i++){
-       updateSizes![i].qty = updateSizes![i].qty - item.qty[i].qty
-      }
-      await product.findByIdAndUpdate(item._id, {sizes: updateSizes});
-    })
+    const orderDetails = currentOrder?.order_details
+    editResiduals(orderDetails);
+    // await orderDetails?.forEach(async (item)=>{
+    //   // console.log(item.qty)
+    //   const currentProduct = await product.findById(item._id);
+    //   if(!currentProduct){
+    //     throw ServerError.error400(
+    //       "Неверный id товара."
+    //     );
+    //   }
+    //   let updateSizes = currentProduct?.sizes;
+    //   for(let i = 0; i<updateSizes!.length; i++){
+    //    updateSizes![i].qty = updateSizes![i].qty - item.qty[i].qty
+    //   }
+    //   await product.findByIdAndUpdate(item._id, {sizes: updateSizes});
+    // })
   }
   catch {
     next(ServerError.error500())
