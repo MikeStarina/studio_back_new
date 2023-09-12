@@ -117,11 +117,6 @@ export const createOrder = async (
       },
     };
 
-    // console.log(paymentData)
-    // console.log(receiptItems)
-    // console.log('>>>')
-    // console.log(freeShipping)
-
     newOrder.save(async function (err, newOrderSave) {
       if (err) {
         return err;
@@ -137,30 +132,12 @@ export const createOrder = async (
     //       payload,
     //     });
         return res.send({ paymentUrl, id: newOrderSave._id });
-    // console.log(newOrderSave)
-    await sendMail({
-            to: 'fallenarh@gmail.com',
-            subject: `PNHD STUDIO | Заказ создан и ожидает оплаты`,
-            payload,
-          });
       }
-
     });
-
   } catch {
     next(ServerError.error400());
     // next(e.message);
   }
-  //удоли
-  // const object  = req.body;
-  // const currentOrder = await order.findOne({ _id: id });
-  // console.log(id)
-  // console.log(currentOrder)
-//     currentOrder!.isPayed = true;
-//     currentOrder!.order_status = 'pending';
-// console.log(currentOrder)
-//
-  //удоли
 };
 
 /*

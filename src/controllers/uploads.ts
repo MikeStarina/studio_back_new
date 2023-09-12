@@ -34,9 +34,7 @@ export const uploadFunc = async (
     const filePath = path.resolve(`src/public/uploads/${newFilename}`);
 
     const fileUrl = `/uploads/${newFilename}`;
-
     await files.files.mv(filePath);
-
     const size = await imageSize(filePath);
 
     if (!size)

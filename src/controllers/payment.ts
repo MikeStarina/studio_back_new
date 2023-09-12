@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express"
-import mongoose from "mongoose";
 import { orderClientTemplate } from "../template/orderClientTemplate";
 import order from "../models/order";
 import product from "../models/product";
@@ -57,20 +56,6 @@ export const getPaymentConfirmation = async (req: Request, res: Response, next: 
     await currentOrder!.save();
     const orderDetails = currentOrder?.order_details
     editResiduals(orderDetails);
-    // await orderDetails?.forEach(async (item)=>{
-    //   // console.log(item.qty)
-    //   const currentProduct = await product.findById(item._id);
-    //   if(!currentProduct){
-    //     throw ServerError.error400(
-    //       "Неверный id товара."
-    //     );
-    //   }
-    //   let updateSizes = currentProduct?.sizes;
-    //   for(let i = 0; i<updateSizes!.length; i++){
-    //    updateSizes![i].qty = updateSizes![i].qty - item.qty[i].qty
-    //   }
-    //   await product.findByIdAndUpdate(item._id, {sizes: updateSizes});
-    // })
   }
   catch {
     next(ServerError.error500())
