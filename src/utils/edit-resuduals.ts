@@ -8,7 +8,7 @@ export const editResiduals = <TOrderDetailsData, TOrdersDetailsFriend extends ke
   try{
     //@ts-ignore
     arr?.forEach(async (item)=>{
-      const currentProduct = item.textile.includes('#Безызбежно') ? await friends.findById(item._id) : await product.findById(item._id);
+      const currentProduct = item.textile.includes('#Безызбежно') ? await friends.find({ friend: "zagitova"}) : await product.findById(item._id);
       if(!currentProduct){
         throw ServerError.error400(
           "Неверный id товара."
@@ -19,7 +19,7 @@ export const editResiduals = <TOrderDetailsData, TOrdersDetailsFriend extends ke
       for(let i = 0; i<updateSizes!.length; i++){
        updateSizes![i].qty = updateSizes![i].qty - item.qty[i].qty
       }
-      item.textile.includes('#Безызбежно') ? await friends.findByIdAndUpdate(item._id, {product: { sizes: updateSizes }}) : await product.findByIdAndUpdate(item._id, {sizes: updateSizes});
+      item.textile.includes('#Безызбежно') ? await friends.findOneAndUpdate({ friend: "zagitova" }, { product: { sizes: updateSizes } }) : await product.findByIdAndUpdate(item._id, {sizes: updateSizes});
     })
   }
   catch{
