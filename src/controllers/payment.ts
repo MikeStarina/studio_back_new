@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express"
 import { orderClientTemplate } from "../template/orderClientTemplate";
 import order from "../models/order";
+import product from "../models/product";
 import { sendMail } from "../utils/mailer";
 import ServerError from "../utils/server-error-class";
-
+import { editResiduals } from "../utils/edit-resuduals";
 
 export const getPaymentConfirmation = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -56,6 +57,8 @@ export const getPaymentConfirmation = async (req: Request, res: Response, next: 
     await sendMail(staffMailData) //письмо наше
 
     await currentOrder!.save();
+    const orderDetails = currentOrder?.order_details
+    editResiduals(orderDetails);
   }
   catch {
     next(ServerError.error500())
