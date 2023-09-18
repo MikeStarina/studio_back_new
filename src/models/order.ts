@@ -97,9 +97,9 @@ export interface IOrder {
   comment: string;
   order_details: [
     {
-      type: String;
+      type: string;
       links: [];
-      textile: String;
+      textile: string;
       qty: [{
         name:string;
         qty: number;

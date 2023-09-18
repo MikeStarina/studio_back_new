@@ -5,6 +5,8 @@ import { sendMail } from "../utils/mailer";
 import { paymentRequest } from "../utils/payment";
 import ServerError from "../utils/server-error-class";
 import { IReceiptItems, IOrderItem } from "types/orders";
+import { getPaymentConfirmation } from "./payment";
+import order from "../models/order";
 
 export const createOrder = async (
   req: Request,
@@ -27,6 +29,7 @@ export const createOrder = async (
     packages: orderData.packages,
     shipping_price: orderData.shipping_price,
     shipping_point: orderData.shipping_point,
+    shipping: orderData.isShipping ? 'Доставка по РФ' : 'Самовывоз из студии',
   };
 
   let printingService = false;
