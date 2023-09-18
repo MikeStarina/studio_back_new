@@ -39,4 +39,11 @@ type TOrderDetailsData =[
   }
 ]
 
-export { TOrderDetailsData };
+type TOrdersDetailsFriend = [
+  {
+    friend?: string;
+    products: TOrderDetailsData ;
+  }
+]
+
+export { TOrderDetailsData, TOrdersDetailsFriend };
