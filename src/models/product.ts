@@ -1,122 +1,122 @@
 import mongoose from "mongoose";
 
-
-
 interface IProduct {
-    name: String;
-    description: String;
-    links: String[],
-    type: String;
-    price: Number;
-    shippingParams: {
-      weight: Number;
-      width: Number;
-      length: Number;
-      depth: Number;
-    }
-    stock: String;
-    color: String;
-    category: String;
-    isSale: boolean;
-    isForPrinting: boolean;
-    image_url: String;
-    galleryPhotos: String[];
-    editor_front_view: String;
-    editor_back_view: String;
-    editor_lsleeve_view: String;
-    editor_rsleeve_view: String;
-    sizes: Array<{name: String, qty: number}>;
-    friends: String;
+  slug: String;
+  name: String;
+  description: String;
+  links: String[];
+  type: String;
+  price: Number;
+  shippingParams: {
+    weight: Number;
+    width: Number;
+    length: Number;
+    depth: Number;
+  };
+  stock: String;
+  color: String;
+  category: String;
+  isSale: boolean;
+  isForPrinting: boolean;
+  image_url: String;
+  galleryPhotos: String[];
+  editor_front_view: String;
+  editor_back_view: String;
+  editor_lsleeve_view: String;
+  editor_rsleeve_view: String;
+  sizes: Array<{ name: String; qty: number }>;
+  friends: String;
 }
 
-
 const productSchema = new mongoose.Schema<IProduct>({
-    name: {
-        type: String,
-        required: true,
-    },
-    description: {
-        type: String,
-        required: true,
-    },
-    links: [
-        {
-            type: String,
-        }
-    ],
-    type: {
-        type: String,
-        required: true,
-    },
-    price: {
-        type: Number,
-        required: true,
-    },
-    shippingParams: {
-        weight: {type: Number, required: true},
-        width: {type: Number, required: true},
-        length: {type: Number, required: true},
-        depth: {type: Number, required: true},
-    },
-    stock: {
+  slug: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  links: [
+    {
       type: String,
-      default: 'studio' //supplier
     },
-    color: {
+  ],
+  type: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  shippingParams: {
+    weight: { type: Number, required: true },
+    width: { type: Number, required: true },
+    length: { type: Number, required: true },
+    depth: { type: Number, required: true },
+  },
+  stock: {
+    type: String,
+    default: "studio", //supplier
+  },
+  color: {
+    type: String,
+    required: true,
+  },
+  category: {
+    type: String,
+    required: true,
+  },
+  isSale: {
+    type: Boolean,
+    default: false,
+  },
+  isForPrinting: {
+    type: Boolean,
+    default: true,
+  },
+  image_url: {
+    type: String,
+    required: true,
+  },
+  galleryPhotos: [
+    {
+      type: String,
+    },
+  ],
+  editor_front_view: {
+    type: String,
+  },
+  editor_back_view: {
+    type: String,
+  },
+  editor_lsleeve_view: {
+    type: String,
+  },
+  editor_rsleeve_view: {
+    type: String,
+  },
+  sizes: [
+    {
+      name: {
         type: String,
-        required: true,
+      },
+      qty: {
+        type: Number,
+      },
     },
-    category: {
-        type: String,
-        required: true,
-    },
-    isSale: {
-        type: Boolean,
-        default: false,
-    },
-    isForPrinting: {
-        type: Boolean,
-        default: true,
-    },
-    image_url: {
-        type: String,
-        required: true,
-    },
-    galleryPhotos: [
-        {
-            type: String
-        }
-    ],
-    editor_front_view: {
-        type: String,
-    },
-    editor_back_view: {
-        type: String,
-    },
-    editor_lsleeve_view: {
-        type: String,
-    },
-    editor_rsleeve_view: {
-        type: String,
-    },
-    sizes: [
-        {
-            name: {
-                type: String
-            },
-            qty: {
-                type: Number,
-            },
-        }
-    ],
-    friends: {
-        type: String,
-    }
-})
+  ],
+  friends: {
+    type: String,
+  },
+});
 
-
-
-export default mongoose.model<IProduct>('product', productSchema);
+export default mongoose.model<IProduct>("product", productSchema);
 
 /*
 {
