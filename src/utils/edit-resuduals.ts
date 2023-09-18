@@ -8,18 +8,18 @@ export const editResiduals = <TOrderDetailsData, TOrdersDetailsFriend extends ke
   try{
     //@ts-ignore
     arr?.forEach(async (item)=>{
-      const currentProduct = item.friend.includes('zagitova') ? await friends.findById(item._id) : await product.findById(item._id);
+      const currentProduct = item.textile.includes('#Безызбежно') ? await friends.findById(item._id) : await product.findById(item._id);
       if(!currentProduct){
         throw ServerError.error400(
           "Неверный id товара."
         );
       }
       //@ts-ignore
-      let updateSizes = item.friend.includes('zagitova') ? currentProduct?.products.sizes : currentProduct?.sizes;
+      let updateSizes = item.textile.includes('#Безызбежно') ? currentProduct?.products.sizes : currentProduct?.sizes;
       for(let i = 0; i<updateSizes!.length; i++){
        updateSizes![i].qty = updateSizes![i].qty - item.qty[i].qty
       }
-      item.friend.includes('zagitova') ? await friends.findByIdAndUpdate(item._id, {sizes: updateSizes}) : await product.findByIdAndUpdate(item._id, {sizes: updateSizes});
+      item.textile.includes('#Безызбежно') ? await friends.findByIdAndUpdate(item._id, {product: { sizes: updateSizes }}) : await product.findByIdAndUpdate(item._id, {sizes: updateSizes});
     })
   }
   catch{
