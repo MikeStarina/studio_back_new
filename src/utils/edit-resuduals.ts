@@ -22,7 +22,7 @@ export const editResiduals = async <TOrderDetailsData, TOrdersDetailsFriend exte
        updateSizes![i].qty = updateSizes![i].qty - item.qty[i].qty
       }
       console.log(updateSizes, '2');
-      item.textile.includes('#Безызбежно') ? await friends.findOneAndUpdate({ friend: "zagitova" }, { product: { sizes: updateSizes } }) : await product.findByIdAndUpdate(item._id, {sizes: updateSizes});
+      const updatedItemSizes = item.textile.includes('#Безызбежно') ? await friends.findOneAndUpdate({ friend: "zagitova" }, { products: [{sizes: updateSizes }] }) : await product.findByIdAndUpdate(item._id, {sizes: updateSizes});
     })
   }
   catch{
