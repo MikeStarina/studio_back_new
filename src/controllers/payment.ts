@@ -55,10 +55,9 @@ export const getPaymentConfirmation = async (req: Request, res: Response, next: 
 
     await sendMail(userMailData) //письмо клиенту
     await sendMail(staffMailData) //письмо наше
-
-    await currentOrder!.save();
     const orderDetails = currentOrder?.order_details
-    editResiduals(orderDetails);
+    await currentOrder!.save();
+    await editResiduals(orderDetails);
   }
   catch {
     next(ServerError.error500())
