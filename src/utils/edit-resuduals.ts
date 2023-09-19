@@ -16,12 +16,12 @@ export const editResiduals = async <TOrderDetailsData, TOrdersDetailsFriend exte
         );
       }
       //@ts-ignore
-      let updateSizes = item.textile.includes('#Безызбежно') ? currentProduct?.products.sizes : currentProduct?.sizes;
-      console.log(updateSizes);
+      let updateSizes = item.textile.includes('#Безызбежно') ? currentProduct?.products[0].sizes : currentProduct?.sizes;
+      console.log(updateSizes, '1');
       for(let i = 0; i<updateSizes!.length; i++){
        updateSizes![i].qty = updateSizes![i].qty - item.qty[i].qty
       }
-      console.log(updateSizes);
+      console.log(updateSizes, '2');
       item.textile.includes('#Безызбежно') ? await friends.findOneAndUpdate({ friend: "zagitova" }, { product: { sizes: updateSizes } }) : await product.findByIdAndUpdate(item._id, {sizes: updateSizes});
     })
   }
