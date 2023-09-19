@@ -4,11 +4,12 @@ import ServerError from "./server-error-class";
 import { TOrderDetailsData, TOrdersDetailsFriend } from "../types/resudals";
 
 
-export const editResiduals = <TOrderDetailsData, TOrdersDetailsFriend extends keyof TOrderDetailsData>(arr: TOrderDetailsData | undefined)=>{
+export const editResiduals = async <TOrderDetailsData, TOrdersDetailsFriend extends keyof TOrderDetailsData> (arr: TOrderDetailsData | undefined) => {
   try{
     //@ts-ignore
     arr?.forEach(async (item)=>{
-      const currentProduct = item.textile.includes('#Безызбежно') ? await friends.find({ friend: "zagitova"}) : await product.findById(item._id);
+      const currentProduct = item.textile.includes('#Безызбежно') ? await friends.findOne({ friend: "zagitova"}) : await product.findById(item._id);
+      console.log(currentProduct)
       if(!currentProduct){
         throw ServerError.error400(
           "Неверный id товара."
@@ -16,9 +17,11 @@ export const editResiduals = <TOrderDetailsData, TOrdersDetailsFriend extends ke
       }
       //@ts-ignore
       let updateSizes = item.textile.includes('#Безызбежно') ? currentProduct?.products.sizes : currentProduct?.sizes;
+      console.log(updateSizes);
       for(let i = 0; i<updateSizes!.length; i++){
        updateSizes![i].qty = updateSizes![i].qty - item.qty[i].qty
       }
+      console.log(updateSizes);
       item.textile.includes('#Безызбежно') ? await friends.findOneAndUpdate({ friend: "zagitova" }, { product: { sizes: updateSizes } }) : await product.findByIdAndUpdate(item._id, {sizes: updateSizes});
     })
   }
