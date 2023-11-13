@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 interface IBlog {
   title: String;
   slug: String;
-  createdAt: Date;
+  created: String;
   blog: [
     {subtitle?: String},
     {text?: String[]},
@@ -21,9 +21,9 @@ const blogSchema = new mongoose.Schema<IBlog>({
     type: String,
     required: true,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now()
+  created: {
+    type: String,
+    required: true,
   },
   blog: [],
 });
