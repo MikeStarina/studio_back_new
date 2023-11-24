@@ -68,6 +68,7 @@ app.use("/api/friends", friendsRouter);
 app.use(fileUpload());
 app.use("/api/uploads", uploadRouter);
 app.use('/api/blogs', blogsRouter);
+app.use('/api/AIChat', );
 
 app.use(errorLogger);
 app.use(errors());
