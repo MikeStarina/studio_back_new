@@ -1,7 +1,8 @@
 import { Router } from "express";
+import { aiChat } from "../controllers/aiChat"
 
 const router = Router();
 
-router.get("/key")
+router.post('/', aiChat)
 
 export default router;
