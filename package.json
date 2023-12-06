@@ -35,7 +35,9 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
+    "@img/sharp-darwin-x64": "^0.33.0",
     "@typescript-eslint/parser": "^5.48.2",
+    "axios": "^1.6.2",
     "celebrate": "^15.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
@@ -43,6 +45,7 @@
     "express-fileupload": "^1.4.0",
     "express-winston": "^4.2.0",
     "fileupload": "^1.0.0",
+    "fs": "^0.0.1-security",
     "heic-convert": "^1.2.4",
     "image-size": "^1.0.2",
     "mongoose": "^6.8.4",
@@ -50,6 +53,7 @@
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.9",
     "nodemailer": "^6.9.1",
+    "sharp": "^0.33.0",
     "winston": "^3.8.2"
   }
 }
