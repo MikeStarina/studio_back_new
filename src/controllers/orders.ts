@@ -14,7 +14,6 @@ export const createOrder = async (
   next: NextFunction
 ) => {
   const orderData = await req.body;
-  console.log(orderData);
   const data = {
     owner_name: orderData.owner_name,
     owner_phone: orderData.owner_phone,
@@ -31,6 +30,7 @@ export const createOrder = async (
     shipping_point: orderData.shipping_point,
     shipping: orderData.isShipping ? 'Доставка по РФ' : 'Самовывоз из студии',
   };
+  console.log(data);
 
   let printingService = false;
   const freeShipping =
