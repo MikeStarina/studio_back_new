@@ -94,7 +94,7 @@ export const createOrder = async (
     console.log(receiptItems);
     const paymentData = {
       amount: {
-        value: newOrder.discounted_price,
+        value:  newOrder.isShipping ? newOrder.discounted_price + newOrder.shipping_price : newOrder.discounted_price,
         currency: "RUB",
       },
       confirmation: {
