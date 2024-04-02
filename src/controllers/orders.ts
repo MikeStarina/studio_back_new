@@ -14,7 +14,7 @@ export const createOrder = async (
   next: NextFunction
 ) => {
   const orderData = await req.body;
-
+  console.log(orderData);
   const data = {
     owner_name: orderData.owner_name,
     owner_phone: orderData.owner_phone,
@@ -48,7 +48,7 @@ export const createOrder = async (
         printingService = true;
       }
       let newReceiptItem = {
-        description: item.print ? item.name + " c печатью" : item.name,
+        description: printingService ? item.name + " c печатью" : item.name,
         quantity: item.qtyAll,
         amount: {
           value: (item.item_price - item.printPrice) / item.qtyAll,
@@ -78,7 +78,6 @@ export const createOrder = async (
     }
 
     if (data.isShipping) {
-      if (!freeShipping) {
         receiptItems.push({
           description: "Доставка СДЕК",
           quantity: 1,
@@ -90,7 +89,7 @@ export const createOrder = async (
           payment_mode: "full_prepayment",
           payment_subject: "commodity",
         });
-      }
+
     }
 
     const paymentData = {
