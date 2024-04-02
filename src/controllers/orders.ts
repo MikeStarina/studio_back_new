@@ -91,7 +91,7 @@ export const createOrder = async (
         });
 
     }
-
+    console.log(receiptItems);
     const paymentData = {
       amount: {
         value: newOrder.discounted_price,
