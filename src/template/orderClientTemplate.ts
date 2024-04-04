@@ -104,7 +104,7 @@ style="
     let sizes = "";
     arr.forEach((item, index) => {
       if (item.userQty > 0) {
-        sizes += `${item.name}:${item.qty}шт, `;
+        sizes += `${item.name}:${item.userQty}шт, `;
       }
     });
     sizes = sizes.substring(0, sizes.length - 2) + ".";

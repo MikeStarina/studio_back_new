@@ -103,6 +103,7 @@ export interface IOrder {
       qty: [{
         name:string;
         qty: number;
+        userQty: number;
         _id: string;
       }];
       qtyAll: number;
