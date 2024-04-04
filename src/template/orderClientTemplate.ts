@@ -130,7 +130,12 @@ style="
         item.indexOf(", Превью:")
       );
     }
-    return `https://pnhdstudioapi.ru${file}`;
+
+    if (file !== "") {
+      return `https://pnhdstudioapi.ru${file}`;
+    } else {
+      return file;
+    }
   };
   const itemTemplate = (
     name: string,
