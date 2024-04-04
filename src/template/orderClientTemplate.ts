@@ -103,7 +103,7 @@ style="
   const qtaSizes = (arr: any[]) => {
     let sizes = "";
     arr.forEach((item, index) => {
-      if (item.qty > 0) {
+      if (item.userQty > 0) {
         sizes += `${item.name}:${item.qty}шт, `;
       }
     });
@@ -130,7 +130,7 @@ style="
         item.indexOf(", Превью:")
       );
     }
-    return file;
+    return `https://pnhdstudioapi.ru${file}`;
   };
   const itemTemplate = (
     name: string,
