@@ -21,7 +21,7 @@ export const createLead = async (
 
 
 
-    const bitrixCreateLeadQuery = `/crm.deal.add.json?FIELDS[TITLE]=Заявка на звонок(тест)&FIELDS[NAME]=${name}&FIELDS[CONTACT_ID]=${addContactsResponseJson.result}&FIELDS[COMMENTS]=${phone}&FIELDS[UF_CRM_1712667811]=${roistat}`;
+    const bitrixCreateLeadQuery = `/crm.deal.add.json?FIELDS[TITLE]=Заявка на звонок&FIELDS[NAME]=${name}&FIELDS[CONTACT_ID]=${addContactsResponseJson.result}&FIELDS[COMMENTS]=${phone}&FIELDS[UF_CRM_1712667811]=${roistat}`;
     const b24res = await fetch(`https://studio.bitrix24.ru/rest/1/xc30vf9u8mxcynr9${bitrixCreateLeadQuery}`)
     const response = await b24res.json()
     //console.log(response);
