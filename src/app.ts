@@ -10,6 +10,7 @@ import promocodeRouter from "./routes/promocodes";
 import shippingRouter from "./routes/shipping";
 import friendsRouter from "./routes/friends";
 import blogsRouter from "./routes/blogs";
+import stockRouter from './routes/stock'
 import { errorHandler } from "./middlewares/errors";
 import { requestLogger, errorLogger } from "./middlewares/logger";
 import cors from "cors";
@@ -68,6 +69,7 @@ app.use("/api/friends", friendsRouter);
 app.use(fileUpload());
 app.use("/api/uploads", uploadRouter);
 app.use('/api/blogs', blogsRouter);
+app.use('/api/stock', stockRouter);
 
 app.use(errorLogger);
 app.use(errors());

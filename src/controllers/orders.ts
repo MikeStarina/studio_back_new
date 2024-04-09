@@ -91,7 +91,7 @@ export const createOrder = async (
         });
 
     }
-    console.log(receiptItems);
+    //console.log(receiptItems);
     const paymentData = {
       amount: {
         value:  newOrder.isShipping ? newOrder.discounted_price + newOrder.shipping_price : newOrder.discounted_price,
