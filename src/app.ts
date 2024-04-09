@@ -41,6 +41,7 @@ const corsOptions = {
 
 export const PORT = parseInt(ENV.parsed!.PORT);
 export const DBURL = ENV.parsed!.DBURL.toString();
+export const STOCK_TOKEN = ENV.parsed!.STOCK_TOKEN.toString();
 
 //console.log(DBURL);
 //!Ghjlerwbz1

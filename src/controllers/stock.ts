@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import ServerError from "../utils/server-error-class";
+import { STOCK_TOKEN } from "../app";
 
 
 
-const token = '42c984ed-31fe-4687-9cd7-0fe305d14e0d'
+
 
 export const stockController = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -13,7 +14,7 @@ export const stockController = async (req: Request, res: Response, next: NextFun
 
     try {
 
-      if (headers.authorization !== 'Bearer 42c984ed-31fe-4687-9cd7-0fe305d14e0d') {
+      if (headers.authorization !== `Bearer ${STOCK_TOKEN}`) {
           return res.status(401).send({ message: 'unauthorized' })
       }
       return res.status(200).send({ data: body });
