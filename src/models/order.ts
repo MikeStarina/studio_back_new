@@ -137,9 +137,11 @@ export interface IOrder {
     }
   ];
   isPayed: boolean;
+  roistat: string;
 }
 
 const orderSchema = new mongoose.Schema<IOrder>({
+  roistat: {type: String, required: false},
   order_key: { type: String, required: false },
   owner_name: { type: String, minlength: 1, maxlength: 40, required: false},
   owner_phone: { type: String, required: false },
