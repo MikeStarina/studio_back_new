@@ -53,6 +53,26 @@ export const getPaymentConfirmation = async (req: Request, res: Response, next: 
       html: await orderClientTemplate(mailData)
     };
 
+
+
+
+
+
+
+    const addContactResponse = await fetch(`https://studio.bitrix24.ru/rest/1/3thx92texmk29ori/crm.contact.add.json?FIELDS[NAME]=${currentOrder!.owner_name}&FIELDS[PHONE][0][VALUE]=${currentOrder!.owner_phone}`);
+    const addContactsResponseJson = await addContactResponse.json();
+
+    const bitrixCreateLeadQuery = `/crm.deal.add.json?FIELDS[TITLE]=Новый заказ&FIELDS[CONTACT_ID]=${addContactsResponseJson.result}&FIELDS[COMMENTS]=${currentOrder!._id}&FIELDS[OPPORTUNITY]=${currentOrder!.isShipping ? currentOrder!.discounted_price + currentOrder!.shipping_price : currentOrder!.discounted_price}&FIELDS[UF_CRM_1712667811]=${currentOrder!.roistat}`;
+    const b24res = await fetch(`https://studio.bitrix24.ru/rest/1/xc30vf9u8mxcynr9${bitrixCreateLeadQuery}`)
+    const response = await b24res.json()
+
+
+
+
+
+
+
+
     await sendMail(userMailData) //письмо клиенту
     await sendMail(staffMailData) //письмо наше
     const orderDetails = currentOrder?.order_details

@@ -29,8 +29,9 @@ export const createOrder = async (
     shipping_price: orderData.shipping_price,
     shipping_point: orderData.shipping_point,
     shipping: orderData.isShipping ? 'Доставка по РФ' : 'Самовывоз из студии',
+    roistat: orderData.roistat
   };
-  console.log(data);
+
 
   let printingService = false;
   const freeShipping =
