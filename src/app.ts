@@ -31,10 +31,10 @@ const corsOptions = {
     "http://95.163.236.13:3000",
     "http://studio.pnhd.ru",
     "http://95.163.236.13",
-    "http://api.pnhd.ru",
-    "https://api.pnhd.ru",
     "http://localhost:3000",
     "http://localhost:1337",
+    "http://195.210.2.174:80",
+    "http://195.210.2.174:8080",
   ],
   optionsSuccessStatus: 200,
 };
