@@ -11,6 +11,7 @@ import shippingRouter from "./routes/shipping";
 import friendsRouter from "./routes/friends";
 import blogsRouter from "./routes/blogs";
 import stockRouter from './routes/stock'
+import aIrouter from './routes/ai-generate';
 import { errorHandler } from "./middlewares/errors";
 import { requestLogger, errorLogger } from "./middlewares/logger";
 import cors from "cors";
@@ -18,6 +19,7 @@ import fileUpload from "express-fileupload";
 import dotenv from "dotenv";
 import { errors } from "celebrate";
 import { getCdekToken } from "./utils/cdek-token";
+import { getYandexArtToken } from "./utils/yandex-art-token";
 import clearImage from "./utils/clear-image";
 
 const ENV = dotenv.config();
@@ -35,6 +37,7 @@ const corsOptions = {
     "http://localhost:1337",
     "http://195.210.2.174:80",
     "http://195.210.2.174:8080",
+    "https://vishivka.online",
   ],
   optionsSuccessStatus: 200,
 };
@@ -42,6 +45,7 @@ const corsOptions = {
 export const PORT = parseInt(ENV.parsed!.PORT);
 export const DBURL = ENV.parsed!.DBURL.toString();
 export const STOCK_TOKEN = ENV.parsed!.STOCK_TOKEN.toString();
+export const YANDEX_CATALOG_ID = ENV.parsed!.YANDEX_CATALOG_ID.toString();
 
 //console.log(DBURL);
 //!Ghjlerwbz1
@@ -59,6 +63,7 @@ mongoose.connect(DBURL, { dbName: "studio" });
 app.use(requestLogger);
 (() => clearImage())();
 (async () => await getCdekToken())();
+(async () => await getYandexArtToken())();
 
 app.use("/api/shipping", shippingRouter);
 app.use("/api/products", productRouter);
@@ -71,6 +76,7 @@ app.use(fileUpload());
 app.use("/api/uploads", uploadRouter);
 app.use('/api/blogs', blogsRouter);
 app.use('/api/stock', stockRouter);
+app.use('/api/generate', aIrouter);
 
 app.use(errorLogger);
 app.use(errors());
