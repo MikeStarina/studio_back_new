@@ -35,8 +35,8 @@ const corsOptions = {
     "http://95.163.236.13",
     "http://localhost:3000",
     "http://localhost:1337",
-    "http://195.210.2.174:80",
-    "http://195.210.2.174:8080",
+    "http://195.210.2.174:80",// сервер 1с
+    "http://195.210.2.174:8080", // сервер 1с
     "https://vishivka.online",
   ],
   optionsSuccessStatus: 200,
@@ -45,7 +45,7 @@ const corsOptions = {
 export const PORT = parseInt(ENV.parsed!.PORT);
 export const DBURL = ENV.parsed!.DBURL.toString();
 export const STOCK_TOKEN = ENV.parsed!.STOCK_TOKEN.toString();
-export const YANDEX_CATALOG_ID = ENV.parsed!.YANDEX_CATALOG_ID.toString();
+export const YANDEX_CATALOG_ID = ENV.parsed!.YANDEX_CATALOG_ID;
 
 //console.log(DBURL);
 //!Ghjlerwbz1
