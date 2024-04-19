@@ -13,6 +13,8 @@ export const createOrder = async (
   res: Response,
   next: NextFunction
 ) => {
+
+
   const orderData = await req.body;
   const data = {
     owner_name: orderData.owner_name,
@@ -92,7 +94,7 @@ export const createOrder = async (
         });
 
     }
-    //console.log(receiptItems);
+    /*
     const paymentData = {
       amount: {
         value:  newOrder.isShipping ? newOrder.discounted_price + newOrder.shipping_price : newOrder.discounted_price,
@@ -116,20 +118,58 @@ export const createOrder = async (
         id: newOrder._id.toString(),
       },
     };
+    */
 
     newOrder.save(async function (err, newOrderSave) {
       if (err) {
         return err;
       } else {
-        const paymentUrl = await paymentRequest(paymentData);
-        let payload = `Ваш заказ на сумму ${newOrderSave.discounted_price} Р. будет выполнен после оплаты.
-    Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`;
+        //const paymentUrl = await paymentRequest(paymentData);
+        const paymentUrl ='';
 
-        await sendMail({
-          to: newOrderSave.owner_email,
-          subject: `PNHD STUDIO | Заказ создан и ожидает оплаты`,
-          payload,
-        });
+        let mailData = {
+          owner_name: newOrderSave!.owner_name,
+          owner_phone: newOrderSave!.owner_phone,
+          owner_email: newOrderSave!.owner_email,
+          isShipping: newOrderSave!.isShipping,
+          shipping_city: newOrderSave!.shipping_city,
+          shipping_point: newOrderSave!.shipping_point,
+          total_price: newOrderSave!.total_price,
+          promocode: newOrderSave!.promocode,
+          discounted_price: newOrderSave!.discounted_price,
+          shipping_price: newOrderSave!.shipping_price,
+          order_details: newOrderSave!.order_details,
+        }
+    //     let payload = `Ваш заказ на сумму ${newOrderSave.discounted_price} Р. будет выполнен после оплаты.
+    // Дублируем ссылку на оплату на всякий случай: ${paymentUrl}`;
+
+        // await sendMail({
+        //   to: newOrderSave.owner_email,
+        //   subject: `PNHD STUDIO | Заказ создан и ожидает оплаты`,
+        //   payload,
+        // });
+        const userMailData = {
+          to: newOrderSave!.owner_email,
+          subject: 'PNHD STUDIO | Заказ создан',
+          payload: 'Скоро пришлем ссылку для оплаты',
+          html: await orderClientTemplate(mailData),
+        };
+        const staffMailData = {
+          to: 'studio@pnhd.ru',
+          subject: `Заказ №${newOrderSave!._id} ожидает оплаты` ,
+          payload: '',
+          html: await orderClientTemplate(mailData)
+        };
+
+        await sendMail(userMailData) //письмо клиенту
+        await sendMail(staffMailData) //письмо наше
+
+        const addContactResponse = await fetch(`https://studio.bitrix24.ru/rest/1/3thx92texmk29ori/crm.contact.add.json?FIELDS[NAME]=${newOrderSave!.owner_name}&FIELDS[PHONE][0][VALUE]=${newOrderSave!.owner_phone}`);
+        const addContactsResponseJson = await addContactResponse.json();
+
+        const bitrixCreateLeadQuery = `/crm.deal.add.json?FIELDS[TITLE]=Новый заказ с сайта&FIELDS[CONTACT_ID]=${addContactsResponseJson.result}&FIELDS[COMMENTS]=${newOrderSave!._id}&FIELDS[OPPORTUNITY]=${newOrderSave!.isShipping ? newOrderSave!.discounted_price + newOrderSave!.shipping_price : newOrderSave!.discounted_price}&FIELDS[UF_CRM_1712667811]=${newOrderSave!.roistat}`;
+        await fetch(`https://studio.bitrix24.ru/rest/1/xc30vf9u8mxcynr9${bitrixCreateLeadQuery}`)
+
         return res.send({ paymentUrl, id: newOrderSave._id });
       }
     });
