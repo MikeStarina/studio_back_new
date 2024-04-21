@@ -37,7 +37,7 @@ const corsOptions = {
     "http://localhost:1337",
     "http://195.210.2.174:80",// сервер 1с
     "http://195.210.2.174:8080", // сервер 1с
-    "https://vishivka.online",
+    "https://vishivka.online",// сервер 1с
   ],
   optionsSuccessStatus: 200,
 };

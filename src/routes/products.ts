@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getProducts, getProduct } from '../controllers/products';
+import { getProducts } from '../controllers/products';
 
 
 
@@ -9,7 +9,6 @@ const router = Router();
 
 
 router.get('/', getProducts);
-router.get('/:id', getProduct);
 
 
 
