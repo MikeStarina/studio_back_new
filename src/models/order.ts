@@ -258,6 +258,7 @@ const orderSchema = new mongoose.Schema<IOrder>({
       qty: [{
         name:{ type: String },
         qty: {type: Number},
+        userQty: {type: Number},
         _id: { type: String },
       }],
       qtyAll: {type: Number},

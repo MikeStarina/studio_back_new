@@ -1413,6 +1413,7 @@ style="padding: 0; margin: 0; width: 20px"
   const setItem = () => {
     let product = "";
     item.forEach((elem: any, index: number) => {
+      //console.log(elem.qty);
       let sizes = qtaSizes(elem.qty);
       if (elem.isForPrinting) {
         let frontPrint = getPreview(elem.front_print);

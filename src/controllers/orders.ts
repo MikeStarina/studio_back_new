@@ -34,7 +34,6 @@ export const createOrder = async (
     roistat: orderData.roistat
   };
 
-
   let printingService = false;
   const freeShipping =
     data.promocode.mechanic === "freeShipping" ? true : false;

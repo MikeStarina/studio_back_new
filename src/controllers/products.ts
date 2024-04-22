@@ -5,12 +5,13 @@ import product from '../models/product';
 
 
 
-export const getProducts = (req: Request, res: Response) => {
+export const getProducts = async (req: Request, res: Response) => {
 
     const params = req.query;
-    return product.find({...params})
-      .then((products) => { res.status(200).send({ data: products }) })
-      .catch(() => { res.status(500).send({ message: "Server Error" })})
+    const products = await product.find({...params})
+    return res.status(200).send({ data: products });
+      //.then((products) => { res.status(200).send({ data: products }) })
+      //.catch(() => { res.status(500).send({ message: "Server Error" })})
 }
 
 
