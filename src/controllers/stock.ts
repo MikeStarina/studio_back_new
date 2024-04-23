@@ -11,7 +11,7 @@ export const stockController = async (req: Request, res: Response, next: NextFun
     const headers = req.headers;
     const body = await req.body;
     console.log(headers);
-    console.log(body);
+    //console.log(body);
 
     try {
 
