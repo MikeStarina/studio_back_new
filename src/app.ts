@@ -21,6 +21,7 @@ import { errors } from "celebrate";
 import { getCdekToken } from "./utils/cdek-token";
 import { getYandexArtToken } from "./utils/yandex-art-token";
 import clearImage from "./utils/clear-image";
+import bodyParser from "body-parser";
 
 const ENV = dotenv.config();
 
@@ -57,6 +58,7 @@ export const YANDEX_CATALOG_ID = ENV.parsed!.YANDEX_CATALOG_ID;
 //mikeTheAdmin
 
 const app = express();
+app.use(bodyParser.json({ limit: '5mb' }));
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
@@ -80,6 +82,7 @@ app.use("/api/friends", friendsRouter);
 app.use(fileUpload());
 app.use("/api/uploads", uploadRouter);
 app.use('/api/blogs', blogsRouter);
+
 app.use('/api/stock', stockRouter);
 app.use('/api/generate', aIrouter);
 

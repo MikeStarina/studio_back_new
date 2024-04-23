@@ -14,10 +14,9 @@ export const stockController = async (req: Request, res: Response, next: NextFun
     //console.log(body);
 
     try {
-
-      if (headers.authorization !== `Bearer ${STOCK_TOKEN}`) {
-          return res.status(401).send({ message: 'unauthorized' })
-      }
+      // if (headers.authorization !== `Bearer ${STOCK_TOKEN}`) {
+      //     return res.status(401).send({ message: 'unauthorized' })
+      // }
       return res.status(200).send({ data: body });
     }
     catch(e) {
