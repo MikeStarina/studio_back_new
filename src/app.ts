@@ -25,7 +25,12 @@ import clearImage from "./utils/clear-image";
 const ENV = dotenv.config();
 
 const corsOptions = {
-  origin: [
+  origin: true,
+  optionsSuccessStatus: 200,
+};
+
+/**
+ *   origin: [
     "https://pnhdstudioapi.ru",
     "https://studio.pnhd.ru",
     "https://www.studio.pnhd.ru",
@@ -40,8 +45,7 @@ const corsOptions = {
     "https://vishivka.online",// сервер 1с
     "*"
   ],
-  optionsSuccessStatus: 200,
-};
+ */
 
 export const PORT = parseInt(ENV.parsed!.PORT);
 export const DBURL = ENV.parsed!.DBURL.toString();
