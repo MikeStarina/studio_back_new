@@ -41,6 +41,8 @@ const corsOptions = {
     "http://95.163.236.13",
     "http://localhost:3000",
     "http://localhost:1337",
+    "http://195.210.2.174:443",
+    "https://195.210.2.174:443",
     "http://195.210.2.174:80",// сервер 1с
     "http://195.210.2.174:8080", // сервер 1с
     "https://vishivka.online",// сервер 1с

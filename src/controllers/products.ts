@@ -9,6 +9,8 @@ export const getProducts = async (req: Request, res: Response) => {
 
     const params = req.query;
     const headers = req.headers;
+    console.log(req.headers.referer);
+    console.log(req.headers.origin);
     //console.log(headers);
     const products = await product.find({...params})
     return res.status(200).send({ data: products });
