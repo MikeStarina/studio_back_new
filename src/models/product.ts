@@ -32,7 +32,7 @@ interface IProduct {
 const productSchema = new mongoose.Schema<IProduct>({
   slug: {
     type: String,
-    required: true,
+    required: false,
   },
   name: {
     type: String,
@@ -59,10 +59,10 @@ const productSchema = new mongoose.Schema<IProduct>({
     required: true,
   },
   shippingParams: {
-    weight: { type: Number, required: true },
-    width: { type: Number, required: true },
-    length: { type: Number, required: true },
-    depth: { type: Number, required: true },
+    weight: { type: Number, required: false },
+    width: { type: Number, required: false },
+    length: { type: Number, required: false },
+    depth: { type: Number, required: false },
   },
   stock: {
     type: String,
