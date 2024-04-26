@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import ServerError from "../utils/server-error-class";
 import { STOCK_TOKEN } from "../app";
-import product from "models/product";
+import product from "../models/product";
 
 
 
