@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 interface IProduct {
   slug: String;
   name: String;
+  oneCCode: String;
   description: String;
   links: String[];
   type: String;
@@ -36,6 +37,9 @@ const productSchema = new mongoose.Schema<IProduct>({
   name: {
     type: String,
     required: true,
+  },
+  oneCCode: {
+    type: String,
   },
   description: {
     type: String,
