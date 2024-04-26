@@ -18,10 +18,14 @@ export const stockController = async (req: Request, res: Response, next: NextFun
       if (headers.authorization !== `Bearer ${STOCK_TOKEN}`) {
         return res.status(401).send({ message: 'unauthorized' })
       }
-
+      let message = {
+        dataDestruction: 'failed',
+        itemToUpdateFinded: 'failed',
+        modifiedSizes: 'failed'
+      };
       const data = body["Данные"];
       data.forEach(async (item: any) => {
-
+        message.dataDestruction = 'success';
         if (item["НаименованиеНоменклатуры"].includes('BASED')) {
             const updatedItem = await product.findOne({ oneCCode: item["КодНоменклатуры"] });
             if (updatedItem) updatedItem.sizes[0].qty = item["Количество"]
@@ -32,9 +36,10 @@ export const stockController = async (req: Request, res: Response, next: NextFun
         let updatedItem = await product.findOne({ oneCCode: item["КодНоменклатуры"]});
 
         if (updatedItem) {
-
+          message.itemToUpdateFinded = 'success';
           let sizesArr: Array<{ name: string, qty: number}> = [];
           item["Характеристики"].forEach((size: any) => {
+            message.modifiedSizes = 'success';
             sizesArr.push({
                 name: size["НаименованиеХарактеристики"],
                 qty: size["Количество"]
@@ -48,7 +53,7 @@ export const stockController = async (req: Request, res: Response, next: NextFun
       })
 
 
-      return res.status(200).send({ data: body });
+      return res.status(200).send({ message });
     }
     catch(e) {
       next(ServerError.error500());
