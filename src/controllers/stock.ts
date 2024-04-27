@@ -18,42 +18,37 @@ export const stockController = async (req: Request, res: Response, next: NextFun
       if (headers.authorization !== `Bearer ${STOCK_TOKEN}`) {
         return res.status(401).send({ message: 'unauthorized' })
       }
-      let message = {
-        dataDestruction: 'failed',
-        itemToUpdateFinded: 'failed',
-        modifiedSizes: 'failed'
-      };
+
       const data = body["Данные"];
       data.forEach(async (item: any) => {
-        message.dataDestruction = 'success';
-        if (item["НаименованиеНоменклатуры"].includes('BASED')) {
-            const updatedItem = await product.findOne({ oneCCode: item["КодНоменклатуры"] });
-            if (updatedItem) updatedItem.sizes[0].qty = item["Количество"]
-            await updatedItem?.save();
+        if (item["НаименованиеНоменклатуры"].includes('BASED') || item["НаименованиеНоменклатуры"].includes('Кепка') || item["НаименованиеНоменклатуры"].includes('Шоппер')) {
+            const sizesArr = [{
+              name: "ONE SIZE",
+              qty: item["Количество"]
+            }]
+            await product.updateMany({ oneCCode: item["КодНоменклатуры"] }, { sizes: sizesArr});
             return
         }
 
-        let updatedItem = await product.findOne({ oneCCode: item["КодНоменклатуры"]});
+        //let updatedItem = await product.find({ oneCCode: item["КодНоменклатуры"] });
 
-        if (updatedItem) {
-          message.itemToUpdateFinded = 'success';
+        if (true) {
           let sizesArr: Array<{ name: string, qty: number}> = [];
+
           item["Характеристики"].forEach((size: any) => {
-            message.modifiedSizes = 'success';
             sizesArr.push({
                 name: size["НаименованиеХарактеристики"],
                 qty: size["Количество"]
             })
           });
-          updatedItem.sizes = sizesArr;
-          updatedItem.save();
+          await product.updateMany({ oneCCode: item["КодНоменклатуры"] }, { sizes: sizesArr });
           return
         }
 
       })
 
 
-      return res.status(200).send({ message });
+      return res.status(200).send({ message: "ok" });
     }
     catch(e) {
       next(ServerError.error500());
