@@ -21,7 +21,7 @@ export const stockController = async (req: Request, res: Response, next: NextFun
 
       const data = body["Данные"];
       data.forEach(async (item: any) => {
-        if (item["НаименованиеНоменклатуры"].includes('BASED')) {
+        if (item["НаименованиеНоменклатуры"].includes('BASED') || item["НаименованиеНоменклатуры"].includes('Кепка') || item["НаименованиеНоменклатуры"].includes('Шоппер')) {
             const sizesArr = [{
               name: "ONE SIZE",
               qty: item["Количество"]
