@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { createLead } from "../controllers/lead";
+import { dealAddHook } from "../controllers/deal-add-hook";
 
 const router = Router();
 
-router.post("/", createLead);
+router.post("/", dealAddHook);
 
 export default router;
