@@ -22,6 +22,7 @@ import { getCdekToken } from "./utils/cdek-token";
 import { getYandexArtToken } from "./utils/yandex-art-token";
 import clearImage from "./utils/clear-image";
 import bodyParser from "body-parser";
+import dealaddrouter from './routes/deal-add-hook';
 
 const ENV = dotenv.config();
 
@@ -84,6 +85,7 @@ app.use("/api/friends", friendsRouter);
 app.use(fileUpload());
 app.use("/api/uploads", uploadRouter);
 app.use('/api/blogs', blogsRouter);
+app.use('/api/dealadd', dealaddrouter);
 
 app.use('/api/stock', stockRouter);
 app.use('/api/generate', aIrouter);
