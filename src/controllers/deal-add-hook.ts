@@ -24,15 +24,3 @@ export const dealAddHook = async (req: Request, res: Response, next: NextFunctio
 
 
 
-/* {
-  event: 'ONCRMDEALADD',
-  data: { FIELDS: { ID: '9678' } },
-  ts: '1715086657',
-  auth: {
-    domain: 'studio.bitrix24.ru',
-    client_endpoint: 'https://studio.bitrix24.ru/rest/',
-    server_endpoint: 'https://oauth.bitrix.info/rest/',
-    member_id: '5b7d6464a7bfa19dbe6c3cdd5e5c1298',
-    application_token: 't5ukj5gdwwpu8ae59u9iac0ckgpqne0j'
-  }
-} */
