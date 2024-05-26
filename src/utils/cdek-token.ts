@@ -25,12 +25,13 @@ export const getCdekToken = async () => {
           },
         }
       );
+      //console.log(await data.json());
       const token = await data.json();
-
+      //console.log(token);
       // console.log("load new token:", token.access_token);
       return myCache.set("myKey", token.access_token, 3599);
     } catch (err) {
-      throw new Error("Ошибка запроса токена");
+      console.log(err);
     }
   }
 };
