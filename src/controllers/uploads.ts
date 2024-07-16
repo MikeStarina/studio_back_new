@@ -10,7 +10,7 @@ export const uploadFunc = async (
   next: NextFunction
 ) => {
   const files: any = await req.files;
-
+  console.log(files)
   try {
     let fileExt = "";
     if (
@@ -20,6 +20,8 @@ export const uploadFunc = async (
       fileExt = ".jpg";
     } else if (files.files.mimetype !== "image/png") {
       fileExt = ".png";
+    } else if (files.files.mimetype !== 'image/gif') {
+      fileExt = ".gif";
     } else {
       throw ServerError.error400(
         "Неверный формат файла. Используйте png или jpg"
