@@ -84,7 +84,7 @@ app.use("/api/promocodes", promocodeRouter);
 app.use("/api/friends", friendsRouter);
 app.use(fileUpload());
 app.use("/api/uploads", uploadRouter);
-app.use('/api/blogs', blogsRouter);
+app.use('/api/blog', blogsRouter);
 app.use('/api/dealadd', dealaddrouter);
 
 app.use('/api/stock', stockRouter);
