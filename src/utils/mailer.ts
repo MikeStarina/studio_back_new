@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 
 const ENV = dotenv.config();
 export const MAIL_LOGIN = ENV.parsed!.MAIL_LOGIN.toString();
+console.log('login: '+ MAIL_LOGIN)
 export const MAIL_PASS = ENV.parsed!.MAIL_PASS.toString();
 
 type TMailData = {
