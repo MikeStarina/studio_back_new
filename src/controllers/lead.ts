@@ -20,7 +20,7 @@ export const createLead = async (
     const bitrixCreateLeadQuery = `/crm.deal.add.json?FIELDS[TITLE]=Заявка на звонок&FIELDS[NAME]=${name}&FIELDS[CONTACT_ID]=${addContactsResponseJson.result}&FIELDS[COMMENTS]=${phone}&FIELDS[UF_CRM_1712667811]=${roistat}`;
     const b24res = await fetch(`https://pinhead.bitrix24.ru/rest/5208/xp8becgjl3vgw7e4/${bitrixCreateLeadQuery}`)
     const response = await b24res.json()
-    console.log(response);
+    console.log('response from Bitrix24 (lead creation):', response);
 
     // Код тут актуален до настройки роутов на сдек
     // const cache = await getCdekToken();
