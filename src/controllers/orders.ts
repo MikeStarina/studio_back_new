@@ -163,11 +163,11 @@ export const createOrder = async (
         await sendMail(userMailData) //письмо клиенту
         await sendMail(staffMailData) //письмо наше
 
-        const addContactResponse = await fetch(`https://studio.bitrix24.ru/rest/1/3thx92texmk29ori/crm.contact.add.json?FIELDS[NAME]=${newOrderSave!.owner_name}&FIELDS[PHONE][0][VALUE]=${newOrderSave!.owner_phone}`);
+        const addContactResponse = await fetch(`https://pinhead.bitrix24.ru/rest/5208/xp8becgjl3vgw7e4/crm.contact.add.json?FIELDS[NAME]=${newOrderSave!.owner_name}&FIELDS[PHONE][0][VALUE]=${newOrderSave!.owner_phone}`);
         const addContactsResponseJson = await addContactResponse.json();
 
         const bitrixCreateLeadQuery = `/crm.deal.add.json?FIELDS[TITLE]=Новый заказ с сайта&FIELDS[CONTACT_ID]=${addContactsResponseJson.result}&FIELDS[COMMENTS]=${newOrderSave!._id}&FIELDS[OPPORTUNITY]=${newOrderSave!.isShipping ? newOrderSave!.discounted_price + newOrderSave!.shipping_price : newOrderSave!.discounted_price}&FIELDS[UF_CRM_1712667811]=${newOrderSave!.roistat}`;
-        await fetch(`https://studio.bitrix24.ru/rest/1/xc30vf9u8mxcynr9${bitrixCreateLeadQuery}`)
+        await fetch(`https://pinhead.bitrix24.ru/rest/5208/xp8becgjl3vgw7e4${bitrixCreateLeadQuery}`)
 
         return res.send({ paymentUrl, id: newOrderSave._id });
       }
