@@ -13,15 +13,7 @@ export const createLead = async (
   const { name, phone, roistat } = await req.body;
   try {
     const newLead = new lead({ name, phone, roistat });
-
     const payload = `Имя: ${name}, Телефон: ${phone}`; 
-    await sendMail({
-      to: "studio@pnhd.ru",
-      subject: "Новая заявка на звонок",
-      payload,
-      html:'',
-    });
-    newLead.save();
     const addContactResponse = await fetch(`https://pinhead.bitrix24.ru/rest/5208/xp8becgjl3vgw7e4/crm.contact.add.json?FIELDS[NAME]=${name}&FIELDS[PHONE][0][VALUE]=${phone}`);
     const addContactsResponseJson = await addContactResponse.json();
 
