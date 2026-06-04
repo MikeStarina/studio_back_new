@@ -14,14 +14,14 @@ export const createLead = async (
   try {
     const newLead = new lead({ name, phone, roistat });
     const payload = `Имя: ${name}, Телефон: ${phone}`; 
-    const addContactResponse = await fetch(`https://pinhead.bitrix24.ru/rest/5208/xp8becgjl3vgw7e4/crm.contact.add.json?FIELDS[NAME]=${name}&FIELDS[PHONE][0][VALUE]=${phone}`);
+    const addContactResponse = await fetch(`https://pinhead.bitrix24.ru/rest/5208/fuj30g3c9alz0nv9/crm.contact.add.json?FIELDS[NAME]=${name}&FIELDS[PHONE][0][VALUE]=${phone}`);
     const addContactsResponseJson = await addContactResponse.json();
 
-    const bitrixCreateLeadQuery = `/crm.deal.add.json?FIELDS[TITLE]=Заявка на звонок&FIELDS[NAME]=${name}&FIELDS[CONTACT_ID]=${addContactsResponseJson.result}&FIELDS[COMMENTS]=${phone}&FIELDS[UF_CRM_1712667811]=${roistat}`;
-    const b24res = await fetch(`https://pinhead.bitrix24.ru/rest/5208/xp8becgjl3vgw7e4/${bitrixCreateLeadQuery}`)
+    const bitrixCreateLeadQuery = `/crm.deal.add.json?FIELDS[TITLE]=Заявка на звонок&FIELDS[NAME]=${name}&FIELDS[CONTACT_ID]=${addContactsResponseJson.result}&FIELDS[COMMENTS]=${phone}&FIELDS[UF_CRM_1721128589]=${roistat}&FIELDS[CATEGORY_ID]=52`;
+    const b24res = await fetch(`https://pinhead.bitrix24.ru/rest/5208/fuj30g3c9alz0nv9/${bitrixCreateLeadQuery}`)
     const response = await b24res.json()
     console.log('response from Bitrix24 (lead creation):', response);
-
+    //UF_CRM_1721128589
     // Код тут актуален до настройки роутов на сдек
     // const cache = await getCdekToken();
     // console.log(
