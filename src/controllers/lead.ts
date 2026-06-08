@@ -11,13 +11,15 @@ export const createLead = async (
   next: NextFunction
 ) => {
   const { name, phone, roistat } = await req.body;
+  const managerIds = [11750, 12254, 12044, 11746, 11892, 14544];
+  const randomManagerId = managerIds[Math.floor(Math.random() * managerIds.length)];
   try {
     const newLead = new lead({ name, phone, roistat });
     const payload = `Имя: ${name}, Телефон: ${phone}`; 
     const addContactResponse = await fetch(`https://pinhead.bitrix24.ru/rest/5208/fuj30g3c9alz0nv9/crm.contact.add.json?FIELDS[NAME]=${name}&FIELDS[PHONE][0][VALUE]=${phone}`);
     const addContactsResponseJson = await addContactResponse.json();
 
-    const bitrixCreateLeadQuery = `/crm.deal.add.json?FIELDS[TITLE]=Заявка на звонок&FIELDS[NAME]=${name}&FIELDS[CONTACT_ID]=${addContactsResponseJson.result}&FIELDS[COMMENTS]=${phone}&FIELDS[UF_CRM_1721128589]=${roistat}&FIELDS[CATEGORY_ID]=52`;
+    const bitrixCreateLeadQuery = `/crm.deal.add.json?FIELDS[TITLE]=Заявка на звонок&FIELDS[NAME]=${name}&FIELDS[CONTACT_ID]=${addContactsResponseJson.result}&FIELDS[COMMENTS]=${phone}&FIELDS[UF_CRM_1721128589]=${roistat}&FIELDS[CATEGORY_ID]=52&FIELDS[ASSIGNED_BY_ID]=${randomManagerId}`;
     const b24res = await fetch(`https://pinhead.bitrix24.ru/rest/5208/fuj30g3c9alz0nv9/${bitrixCreateLeadQuery}`)
     const response = await b24res.json()
     console.log('response from Bitrix24 (lead creation):', response);

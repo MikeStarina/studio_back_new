@@ -16,6 +16,8 @@ export const createOrder = async (
 
 
   const orderData = await req.body;
+  const managerIds = [11750, 12254, 12044, 11746, 11892, 14544];
+  const randomManagerId = managerIds[Math.floor(Math.random() * managerIds.length)];
   const data = {
     owner_name: orderData.owner_name,
     owner_phone: orderData.owner_phone,
@@ -152,7 +154,7 @@ export const createOrder = async (
         const addContactResponse = await fetch(`https://pinhead.bitrix24.ru/rest/5208/fuj30g3c9alz0nv9/crm.contact.add.json?FIELDS[NAME]=${newOrderSave!.owner_name}&FIELDS[PHONE][0][VALUE]=${newOrderSave!.owner_phone}`);
         const addContactsResponseJson = await addContactResponse.json();
 
-        const bitrixCreateLeadQuery = `/crm.deal.add.json?FIELDS[TITLE]=Новый заказ с сайта&FIELDS[CONTACT_ID]=${addContactsResponseJson.result}&FIELDS[COMMENTS]=${newOrderSave!._id}&FIELDS[OPPORTUNITY]=${newOrderSave!.isShipping ? newOrderSave!.discounted_price + newOrderSave!.shipping_price : newOrderSave!.discounted_price}&FIELDS[UF_CRM_1721128589]=${newOrderSave!.roistat}&FIELDS[CATEGORY_ID]=52`;
+        const bitrixCreateLeadQuery = `/crm.deal.add.json?FIELDS[TITLE]=Новый заказ с сайта&FIELDS[CONTACT_ID]=${addContactsResponseJson.result}&FIELDS[COMMENTS]=${newOrderSave!._id}&FIELDS[OPPORTUNITY]=${newOrderSave!.isShipping ? newOrderSave!.discounted_price + newOrderSave!.shipping_price : newOrderSave!.discounted_price}&FIELDS[UF_CRM_1721128589]=${newOrderSave!.roistat}&FIELDS[CATEGORY_ID]=52&FIELDS[ASSIGNED_BY_ID]=${randomManagerId}`;
         const b24res = await fetch(`https://pinhead.bitrix24.ru/rest/5208/fuj30g3c9alz0nv9/${bitrixCreateLeadQuery}`)
         const response = await b24res.json()
         console.log('response from Bitrix24 (order creation):', response);
