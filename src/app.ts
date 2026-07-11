@@ -12,9 +12,11 @@ import friendsRouter from "./routes/friends";
 import blogsRouter from "./routes/blogs";
 import stockRouter from './routes/stock'
 import aIrouter from './routes/ai-generate';
+import authRouter from './routes/auth';
 import { errorHandler } from "./middlewares/errors";
 import { requestLogger, errorLogger } from "./middlewares/logger";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import dotenv from "dotenv";
 import { errors } from "celebrate";
@@ -23,11 +25,31 @@ import { getYandexArtToken } from "./utils/yandex-art-token";
 import clearImage from "./utils/clear-image";
 import bodyParser from "body-parser";
 import dealaddrouter from './routes/deal-add-hook';
+import { FRONTEND_URL } from "./config";
 
 const ENV = dotenv.config();
 
+const allowedOrigins = [
+  "https://pnhdstudioapi.ru",
+  "https://studio.pnhd.ru",
+  "https://www.studio.pnhd.ru",
+  "http://localhost:3000",
+  "http://localhost:1337",
+  FRONTEND_URL,
+];
+
 const corsOptions = {
-  origin: true,
+  origin: (
+    origin: string | undefined,
+    callback: (err: Error | null, allow?: boolean) => void
+  ) => {
+    // Allow requests without origin (curl, server-to-server) and whitelisted origins.
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
   optionsSuccessStatus: 200,
 };
 
@@ -64,6 +86,7 @@ const app = express();
 //app.use(bodyParser.json({ limit: '5mb' }));
 app.use(express.json({ limit: '5mb' }));
 app.use(cors(corsOptions));
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname + "/public")));
 
@@ -75,6 +98,7 @@ app.use(requestLogger);
 (async () => await getCdekToken())();
 (async () => await getYandexArtToken())();
 
+app.use("/api/auth", authRouter);
 app.use("/api/shipping", shippingRouter);
 app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
