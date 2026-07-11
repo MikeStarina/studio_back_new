@@ -29,26 +29,8 @@ import { FRONTEND_URL } from "./config";
 
 const ENV = dotenv.config();
 
-const allowedOrigins = [
-  "https://pnhdstudioapi.ru",
-  "https://studio.pnhd.ru",
-  "https://www.studio.pnhd.ru",
-  "http://localhost:3000",
-  "http://localhost:1337",
-  FRONTEND_URL,
-];
-
 const corsOptions = {
-  origin: (
-    origin: string | undefined,
-    callback: (err: Error | null, allow?: boolean) => void
-  ) => {
-    // Allow requests without origin (curl, server-to-server) and whitelisted origins.
-    if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    return callback(null, true);
-  },
+  origin: true,
   credentials: true,
   optionsSuccessStatus: 200,
 };
