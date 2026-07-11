@@ -29,6 +29,15 @@ import { FRONTEND_URL } from "./config";
 
 const ENV = dotenv.config();
 
+// const allowedOrigins = [
+//   "https://pnhdstudioapi.ru",
+//   "https://studio.pnhd.ru",
+//   "https://www.studio.pnhd.ru",
+//   "http://localhost:3000",
+//   "http://localhost:1337",
+//   FRONTEND_URL,
+// ];
+
 const corsOptions = {
   origin: true,
   credentials: true,
