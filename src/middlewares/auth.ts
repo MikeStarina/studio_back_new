@@ -1,11 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import ServerError from "../utils/server-error-class";
-import { verifyToken } from "../utils/auth-token";
+import { ITokenPayload, verifyToken } from "../utils/auth-token";
 import { AUTH_COOKIE_NAME } from "../config";
 import { TUserRole } from "../models/user";
 
+export type AuthRequest = Request & { user?: ITokenPayload };
+
 export const authMiddleware = (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -23,7 +25,7 @@ export const authMiddleware = (
 
 export const requireRole =
   (...roles: TUserRole[]) =>
-  (req: Request, res: Response, next: NextFunction) => {
+  (req: AuthRequest, res: Response, next: NextFunction) => {
     if (!req.user) {
       return next(ServerError.error401("Требуется авторизация"));
     }

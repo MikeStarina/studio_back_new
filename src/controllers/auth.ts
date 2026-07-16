@@ -6,6 +6,7 @@ import { sendOtpEmail } from "../utils/send-otp";
 import { verifyOtp, getResendCooldown } from "../utils/otp";
 import { signToken, setAuthCookie, clearAuthCookie } from "../utils/auth-token";
 import { TOtpPurpose } from "../models/otp";
+import { AuthRequest } from "../middlewares/auth";
 
 const hashPassword = (password: string) => bcrypt.hash(password, 10);
 
@@ -164,7 +165,7 @@ export const logout = async (req: Request, res: Response) => {
 };
 
 export const getMe = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -230,7 +231,7 @@ export const resetPassword = async (
 };
 
 export const requestChangePassword = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -247,7 +248,7 @@ export const requestChangePassword = async (
 };
 
 export const changePassword = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {

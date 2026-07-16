@@ -86,8 +86,20 @@ mongoose.connect(DBURL, { dbName: "studio" });
 
 app.use(requestLogger);
 (() => clearImage())();
-(async () => await getCdekToken())();
-(async () => await getYandexArtToken())();
+(async () => {
+  try {
+    await getCdekToken();
+  } catch (err) {
+    console.error("CDEK token init failed:", err);
+  }
+})();
+(async () => {
+  try {
+    await getYandexArtToken();
+  } catch (err) {
+    console.error("Yandex Art token init failed:", err);
+  }
+})();
 
 app.use("/api/auth", authRouter);
 app.use("/api/shipping", shippingRouter);
