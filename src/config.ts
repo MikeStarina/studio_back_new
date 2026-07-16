@@ -22,7 +22,41 @@ export const JWT_SECRET = getEnv(
 export const JWT_EXPIRES_IN = getEnv("JWT_EXPIRES_IN", "7d");
 
 export const FRONTEND_URL = getEnv("FRONTEND_URL", "http://localhost:3000");
-export const COOKIE_DOMAIN = parsed.COOKIE_DOMAIN ?? process.env.COOKIE_DOMAIN;
+
+/** Empty string in .env must not become Domain="" (browsers reject it). */
+const rawCookieDomain = parsed.COOKIE_DOMAIN ?? process.env.COOKIE_DOMAIN;
+export const COOKIE_DOMAIN =
+  rawCookieDomain && rawCookieDomain.trim() !== ""
+    ? rawCookieDomain.trim()
+    : undefined;
+
+/**
+ * Cross-site cookies (SameSite=None; Secure) are required when the frontend
+ * and API are on different sites (e.g. studio.pnhd.ru → pnhdstudioapi.ru,
+ * or localhost → pnhdstudioapi.ru).
+ *
+ * Override with COOKIE_CROSS_SITE=true|false. Otherwise: on in production, or
+ * when FRONTEND_URL is not localhost.
+ */
+const explicitCrossSite = (
+  parsed.COOKIE_CROSS_SITE ?? process.env.COOKIE_CROSS_SITE ?? ""
+).toLowerCase();
+
+const frontendIsLocal = (() => {
+  try {
+    const host = new URL(FRONTEND_URL).hostname;
+    return host === "localhost" || host === "127.0.0.1";
+  } catch {
+    return true;
+  }
+})();
+
+export const USE_CROSS_SITE_COOKIES =
+  explicitCrossSite === "true"
+    ? true
+    : explicitCrossSite === "false"
+      ? false
+      : IS_PRODUCTION || !frontendIsLocal;
 
 export const AUTH_COOKIE_NAME = "token";
 

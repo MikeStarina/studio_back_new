@@ -74,6 +74,8 @@ export const YANDEX_CATALOG_ID = ENV.parsed!.YANDEX_CATALOG_ID;
 //mikeTheAdmin
 
 const app = express();
+// Behind nginx/ Cloudflare so req.secure / protocol reflect the public HTTPS URL.
+app.set("trust proxy", 1);
 //app.use(bodyParser.json({ limit: '5mb' }));
 app.use(express.json({ limit: '5mb' }));
 app.use(cors(corsOptions));
