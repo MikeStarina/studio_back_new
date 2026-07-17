@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 interface IBanner {
   imageUrl: string;
+  mobileImageUrl: string;
   link: string;
   order: number;
   isActive: boolean;
@@ -10,6 +11,11 @@ interface IBanner {
 const bannerSchema = new mongoose.Schema<IBanner>(
   {
     imageUrl: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    mobileImageUrl: {
       type: String,
       required: true,
       trim: true,

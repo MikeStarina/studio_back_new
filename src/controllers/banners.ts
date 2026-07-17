@@ -34,6 +34,13 @@ const assertBannerBody = (body: Record<string, unknown>, partial = false) => {
       throw ServerError.error400("imageUrl обязателен");
     }
   }
+  if (!partial || "mobileImageUrl" in body) {
+    const mobileImageUrl =
+      typeof body.mobileImageUrl === "string" ? body.mobileImageUrl.trim() : "";
+    if (!mobileImageUrl) {
+      throw ServerError.error400("mobileImageUrl обязателен");
+    }
+  }
   if (!partial || "link" in body) {
     const link = typeof body.link === "string" ? body.link.trim() : "";
     if (!link) {
@@ -98,6 +105,7 @@ export const createBanner = async (
     assertBannerBody(body);
     const doc = await banner.create({
       imageUrl: String(body.imageUrl).trim(),
+      mobileImageUrl: String(body.mobileImageUrl).trim(),
       link: String(body.link).trim(),
       order: Number(body.order),
       isActive: body.isActive !== false && body.isActive !== "false",
@@ -127,6 +135,9 @@ export const updateBanner = async (
 
     if (typeof body.imageUrl === "string") {
       body.imageUrl = body.imageUrl.trim();
+    }
+    if (typeof body.mobileImageUrl === "string") {
+      body.mobileImageUrl = body.mobileImageUrl.trim();
     }
     if (typeof body.link === "string") {
       body.link = body.link.trim();
@@ -168,8 +179,11 @@ export const deleteBanner = async (
       return next(ServerError.error404("Баннер не найден"));
     }
 
-    const key = keyFromCdnUrl(doc.imageUrl);
-    if (key) {
+    const keys = [doc.imageUrl, doc.mobileImageUrl]
+      .map((url) => keyFromCdnUrl(url))
+      .filter((key): key is string => Boolean(key));
+
+    for (const key of keys) {
       try {
         await deleteObjectByKey(key);
       } catch (err) {
