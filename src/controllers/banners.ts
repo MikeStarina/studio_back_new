@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import crypto from "crypto";
+import { readFile } from "fs/promises";
+import { UploadedFile } from "express-fileupload";
 import banner from "../models/banner";
 import ServerError from "../utils/server-error-class";
 import {
@@ -187,11 +189,11 @@ export const uploadBannerImage = async (
   next: NextFunction
 ) => {
   try {
-    const files = req.files as
-      | { files?: { data: Buffer; mimetype: string; name: string } }
+    const uploaded = req.files?.files;
+    const file = (Array.isArray(uploaded) ? uploaded[0] : uploaded) as
+      | UploadedFile
       | undefined;
-    const file = files?.files;
-    if (!file?.data) {
+    if (!file) {
       return next(ServerError.error400("Файл не передан"));
     }
 
@@ -204,8 +206,19 @@ export const uploadBannerImage = async (
       );
     }
 
+    const body: Buffer =
+      file.data && file.data.length > 0
+        ? file.data
+        : file.tempFilePath
+          ? await readFile(file.tempFilePath)
+          : Buffer.alloc(0);
+
+    if (!body.length) {
+      return next(ServerError.error400("Файл не передан"));
+    }
+
     const key = `${getBannersPrefix()}/${crypto.randomUUID()}${ext}`;
-    const url = await uploadBannerObject(key, file.data, file.mimetype);
+    const url = await uploadBannerObject(key, body, file.mimetype);
     return res.status(200).send({ data: { url } });
   } catch (err) {
     console.error("Banner upload failed:", err);
