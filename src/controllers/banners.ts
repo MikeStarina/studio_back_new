@@ -26,6 +26,16 @@ const isValidationError = (err: unknown): boolean =>
       (err as { name: string }).name === "ValidationError"
   );
 
+const safeDeleteStorageUrl = async (url?: string | null) => {
+  const key = url ? keyFromCdnUrl(url) : null;
+  if (!key) return;
+  try {
+    await deleteObjectByKey(key);
+  } catch (err) {
+    console.error("Failed to delete banner object from storage:", err);
+  }
+};
+
 const assertBannerBody = (body: Record<string, unknown>, partial = false) => {
   if (!partial || "imageUrl" in body) {
     const imageUrl =
@@ -128,6 +138,11 @@ export const updateBanner = async (
   next: NextFunction
 ) => {
   try {
+    const existing = await banner.findById(req.params.id);
+    if (!existing) {
+      return next(ServerError.error404("Баннер не найден"));
+    }
+
     const body = { ...(req.body ?? {}) };
     delete body._id;
     delete body.__v;
@@ -156,6 +171,22 @@ export const updateBanner = async (
     if (!doc) {
       return next(ServerError.error404("Баннер не найден"));
     }
+
+    if (
+      typeof body.imageUrl === "string" &&
+      body.imageUrl &&
+      body.imageUrl !== existing.imageUrl
+    ) {
+      await safeDeleteStorageUrl(existing.imageUrl);
+    }
+    if (
+      typeof body.mobileImageUrl === "string" &&
+      body.mobileImageUrl &&
+      body.mobileImageUrl !== existing.mobileImageUrl
+    ) {
+      await safeDeleteStorageUrl(existing.mobileImageUrl);
+    }
+
     return res.status(200).send({ data: doc });
   } catch (err: unknown) {
     if (err instanceof ServerError) {
@@ -179,17 +210,8 @@ export const deleteBanner = async (
       return next(ServerError.error404("Баннер не найден"));
     }
 
-    const keys = [doc.imageUrl, doc.mobileImageUrl]
-      .map((url) => keyFromCdnUrl(url))
-      .filter((key): key is string => Boolean(key));
-
-    for (const key of keys) {
-      try {
-        await deleteObjectByKey(key);
-      } catch (err) {
-        console.error("Failed to delete banner object from storage:", err);
-      }
-    }
+    await safeDeleteStorageUrl(doc.imageUrl);
+    await safeDeleteStorageUrl(doc.mobileImageUrl);
 
     return res.status(200).send({ message: "Баннер удалён", data: doc });
   } catch {
