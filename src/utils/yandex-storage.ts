@@ -14,6 +14,9 @@ const getConfig = () => {
   const bannersPrefix = (
     process.env.YANDEX_S3_BANNERS_PREFIX ?? "banners"
   ).replace(/^\/+|\/+$/g, "");
+  const blogCoversPrefix = (
+    process.env.YANDEX_S3_BLOG_COVERS_PREFIX ?? "blog-covers"
+  ).replace(/^\/+|\/+$/g, "");
   const cdnPublicUrl = (
     process.env.CDN_PUBLIC_URL ?? "https://cdn.pnhd.ru"
   ).replace(/\/+$/, "");
@@ -25,11 +28,13 @@ const getConfig = () => {
     endpoint,
     region,
     bannersPrefix,
+    blogCoversPrefix,
     cdnPublicUrl,
   };
 };
 
 export const getBannersPrefix = () => getConfig().bannersPrefix;
+export const getBlogCoversPrefix = () => getConfig().blogCoversPrefix;
 
 const getClient = () => {
   const { accessKeyId, secretAccessKey, bucket, endpoint, region } =
@@ -51,6 +56,22 @@ const getClient = () => {
 };
 
 export const uploadBannerObject = async (
+  key: string,
+  body: Buffer,
+  contentType: string
+): Promise<string> => {
+  return uploadObject(key, body, contentType);
+};
+
+export const uploadBlogCoverObject = async (
+  key: string,
+  body: Buffer,
+  contentType: string
+): Promise<string> => {
+  return uploadObject(key, body, contentType);
+};
+
+const uploadObject = async (
   key: string,
   body: Buffer,
   contentType: string

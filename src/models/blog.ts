@@ -10,13 +10,14 @@ interface IBlog {
   likes: number;
   hashtags: Array<string>;
   author: string;
-  blog: {__html: string}
+  blog: { __html: string };
+  isActive: boolean;
 }
 
 const blogSchema = new mongoose.Schema<IBlog>({
   post_id: {
     type: Number,
-    required: true
+    required: true,
   },
   title: {
     type: String,
@@ -38,19 +39,23 @@ const blogSchema = new mongoose.Schema<IBlog>({
   },
   likes: {
     type: Number,
-    default: 0
+    default: 0,
   },
   hashtags: {
-    type: [],
-    required: true,
+    type: [String],
+    default: [],
   },
   blog: {
-    type: {__html: String},
-    required: true
+    type: { __html: String },
+    required: true,
   },
   author: {
     type: String,
-  }
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 export default mongoose.model<IBlog>("blog", blogSchema);
