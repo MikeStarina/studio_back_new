@@ -121,10 +121,16 @@ const productSchema = new mongoose.Schema<IProduct>({
       },
     ],
     validate: {
-      validator: (value: Array<{ name?: string }>) =>
-        Array.isArray(value) &&
-        value.length >= 1 &&
-        value.every((s) => Boolean(s?.name && String(s.name).trim())),
+      validator: (value: unknown) => {
+        if (!Array.isArray(value) || value.length < 1) return false;
+        return value.every(
+          (s) =>
+            s &&
+            typeof s === "object" &&
+            typeof (s as { name?: unknown }).name === "string" &&
+            String((s as { name: string }).name).trim() !== ""
+        );
+      },
       message: "Добавьте хотя бы один размер",
     },
   },
