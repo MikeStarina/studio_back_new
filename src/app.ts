@@ -13,6 +13,7 @@ import blogsRouter from "./routes/blogs";
 import stockRouter from './routes/stock'
 import aIrouter from './routes/ai-generate';
 import authRouter from './routes/auth';
+import bannersRouter from "./routes/banners";
 import { errorHandler } from "./middlewares/errors";
 import { requestLogger, errorLogger } from "./middlewares/logger";
 import cors from "cors";
@@ -106,6 +107,7 @@ app.use(requestLogger);
 app.use("/api/auth", authRouter);
 app.use("/api/shipping", shippingRouter);
 app.use("/api/products", productRouter);
+app.use("/api/banners", bannersRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/payments", paymentRouter);
 app.use("/api/leads", leadRouter);

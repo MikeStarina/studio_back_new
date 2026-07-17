@@ -32,7 +32,9 @@ interface IProduct {
 const productSchema = new mongoose.Schema<IProduct>({
   slug: {
     type: String,
-    required: false,
+    required: true,
+    unique: true,
+    trim: true,
   },
   name: {
     type: String,
@@ -105,16 +107,27 @@ const productSchema = new mongoose.Schema<IProduct>({
   editor_rsleeve_view: {
     type: String,
   },
-  sizes: [
-    {
-      name: {
-        type: String,
+  sizes: {
+    type: [
+      {
+        name: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        qty: {
+          type: Number,
+        },
       },
-      qty: {
-        type: Number,
-      },
+    ],
+    validate: {
+      validator: (value: Array<{ name?: string }>) =>
+        Array.isArray(value) &&
+        value.length >= 1 &&
+        value.every((s) => Boolean(s?.name && String(s.name).trim())),
+      message: "Добавьте хотя бы один размер",
     },
-  ],
+  },
   friends: {
     type: String,
   },
