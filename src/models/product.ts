@@ -21,6 +21,7 @@ interface IProduct {
   isForPrinting: boolean;
   image_url: String;
   galleryPhotos: String[];
+  photos: String[];
   editor_front_view: String;
   editor_back_view: String;
   editor_lsleeve_view: String;
@@ -88,9 +89,14 @@ const productSchema = new mongoose.Schema<IProduct>({
   },
   image_url: {
     type: String,
-    required: true,
+    required: false,
   },
   galleryPhotos: [
+    {
+      type: String,
+    },
+  ],
+  photos: [
     {
       type: String,
     },

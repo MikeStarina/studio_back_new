@@ -1,6 +1,23 @@
 import { Request, Response, NextFunction } from "express";
+import crypto from "crypto";
+import { readFile } from "fs/promises";
+import { UploadedFile } from "express-fileupload";
 import product from "../models/product";
 import ServerError from "../utils/server-error-class";
+import {
+  getProductPhotosPrefix,
+  uploadProductPhotoObject,
+  deleteObjectByKey,
+  deleteObjectsByPrefix,
+  keyFromCdnUrl,
+} from "../utils/yandex-storage";
+
+const ALLOWED_MIME: Record<string, string> = {
+  "image/jpeg": ".jpg",
+  "image/jpg": ".jpg",
+  "image/png": ".png",
+  "image/webp": ".webp",
+};
 
 const isMongoDuplicateKey = (err: unknown): boolean =>
   Boolean(
@@ -149,8 +166,103 @@ export const deleteProduct = async (
     if (!doc) {
       return next(ServerError.error404("Товар не найден"));
     }
+    try {
+      await deleteObjectsByPrefix(`${getProductPhotosPrefix()}/${doc._id}/`);
+    } catch (err) {
+      console.error("Failed to clean up product photos in storage:", err);
+    }
     return res.status(200).send({ message: "deleted", data: doc });
   } catch {
+    return next(ServerError.error500());
+  }
+};
+
+export const uploadProductPhoto = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const doc = await product.findById(req.params.id).lean();
+    if (!doc) {
+      return next(ServerError.error404("Товар не найден"));
+    }
+
+    const uploaded = req.files?.files;
+    const file = (Array.isArray(uploaded) ? uploaded[0] : uploaded) as
+      | UploadedFile
+      | undefined;
+    if (!file) {
+      return next(ServerError.error400("Файл не передан"));
+    }
+
+    const ext = ALLOWED_MIME[file.mimetype];
+    if (!ext) {
+      return next(
+        ServerError.error400(
+          "Неверный формат файла. Используйте jpg, png или webp"
+        )
+      );
+    }
+
+    const body: Buffer =
+      file.data && file.data.length > 0
+        ? file.data
+        : file.tempFilePath
+          ? await readFile(file.tempFilePath)
+          : Buffer.alloc(0);
+
+    if (!body.length) {
+      return next(ServerError.error400("Файл не передан"));
+    }
+
+    const key = `${getProductPhotosPrefix()}/${doc._id}/${crypto.randomUUID()}${ext}`;
+    const url = await uploadProductPhotoObject(key, body, file.mimetype);
+    return res.status(200).send({ data: { url } });
+  } catch (err) {
+    console.error("Product photo upload failed:", err);
+    if (err instanceof ServerError) {
+      return next(err);
+    }
+    return next(ServerError.error500("Не удалось загрузить фото в хранилище"));
+  }
+};
+
+export const deleteProductPhoto = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const url = (req.body ?? {}).url;
+    if (typeof url !== "string" || !url) {
+      return next(ServerError.error400("Не передан адрес фото"));
+    }
+
+    const doc = await product.findById(req.params.id);
+    if (!doc) {
+      return next(ServerError.error404("Товар не найден"));
+    }
+
+    doc.photos = (doc.photos ?? []).filter((item) => item !== url);
+    await doc.save();
+
+    // Only touch storage for keys owned by this product, so a stray URL
+    // can be unlinked from the document without deleting someone else's object.
+    const key = keyFromCdnUrl(url);
+    if (key?.startsWith(`${getProductPhotosPrefix()}/${doc._id}/`)) {
+      try {
+        await deleteObjectByKey(key);
+      } catch (err) {
+        console.error("Failed to delete product photo from storage:", err);
+      }
+    }
+
+    return res.status(200).send({ data: doc });
+  } catch (err) {
+    if (err instanceof ServerError) {
+      return next(err);
+    }
     return next(ServerError.error500());
   }
 };

@@ -89,9 +89,9 @@ export const verifyOtpController = async (
     user.isVerified = true;
     await user.save();
 
-    const token = signToken({ id: user.id, role: user.role });
-    setAuthCookie(res, token);
-    return res.send({ user: user.toJSON() });
+    return res.send({
+      message: "Почта подтверждена. Войдите в аккаунт.",
+    });
   } catch (err) {
     return next(ServerError.error500());
   }
@@ -222,9 +222,9 @@ export const resetPassword = async (
     user.passwordHash = await hashPassword(newPassword);
     await user.save();
 
-    const token = signToken({ id: user.id, role: user.role });
-    setAuthCookie(res, token);
-    return res.send({ user: user.toJSON() });
+    return res.send({
+      message: "Пароль обновлён. Войдите с новым паролем.",
+    });
   } catch (err) {
     return next(ServerError.error500());
   }

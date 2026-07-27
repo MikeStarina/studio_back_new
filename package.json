@@ -8,6 +8,8 @@
     "build": "tsc",
     "dev": "ts-node-dev src/app.ts",
     "start": "ts-node src/app.ts",
+    "migrate:photos:dry": "ts-node src/scripts/migrate-product-photos.ts --dry-run",
+    "migrate:photos": "ts-node src/scripts/migrate-product-photos.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Mike Strn | x@pnhd.ru",
