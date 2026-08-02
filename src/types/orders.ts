@@ -27,7 +27,7 @@ interface IOrderItem {
       lsleeve_print?: string;
       rsleeve_print?: string;
 
-      category: string;
+      category: string[];
       color: string;
       description: string;
       editor_back_view: string;
@@ -156,7 +156,7 @@ interface IMailOrderdata{
       lsleeve_print?: string;
       rsleeve_print?: string;
 
-      category: string;
+      category: string[];
       color: string;
       description: string;
       editor_back_view: string;

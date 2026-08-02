@@ -115,7 +115,7 @@ export interface IOrder {
       lsleeve_print?: string;
       rsleeve_print?: string;
 
-      category: string;
+      category: string[];
       color: string;
       description: string;
       editor_back_view: string;
@@ -270,7 +270,7 @@ const orderSchema = new mongoose.Schema<IOrder>({
       lsleeve_print: { type: String },
       rsleeve_print: { type: String },
 
-      category: { type: String },
+      category: { type: [String] },
       color: { type: String },
       description: { type: String },
       editor_back_view: { type: String },

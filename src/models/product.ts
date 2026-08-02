@@ -16,7 +16,8 @@ interface IProduct {
   };
   stock: String;
   color: String;
-  category: String;
+  category: mongoose.Types.ObjectId[];
+  tags: mongoose.Types.ObjectId[];
   isSale: boolean;
   isForPrinting: boolean;
   image_url: String;
@@ -28,6 +29,8 @@ interface IProduct {
   editor_rsleeve_view: String;
   sizes: Array<{ name: String; qty: number }>;
   friends: String;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const productSchema = new mongoose.Schema<IProduct>({
@@ -76,8 +79,16 @@ const productSchema = new mongoose.Schema<IProduct>({
     required: true,
   },
   category: {
-    type: String,
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "category" }],
     required: true,
+    validate: {
+      validator: (value: unknown) => Array.isArray(value) && value.length > 0,
+      message: "Укажите хотя бы одну категорию",
+    },
+  },
+  tags: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "tag" }],
+    default: [],
   },
   isSale: {
     type: Boolean,
@@ -143,7 +154,7 @@ const productSchema = new mongoose.Schema<IProduct>({
   friends: {
     type: String,
   },
-});
+}, { timestamps: true });
 
 export default mongoose.model<IProduct>("product", productSchema);
 

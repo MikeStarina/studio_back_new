@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import mongoose from "mongoose";
 import crypto from "crypto";
 import { readFile } from "fs/promises";
 import { UploadedFile } from "express-fileupload";
@@ -65,6 +66,29 @@ const assertSlugAndSizes = (body: Record<string, unknown>) => {
   }
 };
 
+const assertCategory = (body: Record<string, unknown>) => {
+  const category = body.category;
+  const hasCategory =
+    Array.isArray(category) &&
+    category.some(
+      (c) => typeof c === "string" && mongoose.isValidObjectId(c)
+    );
+  if (!hasCategory) {
+    throw ServerError.error400("Выберите хотя бы одну категорию");
+  }
+};
+
+const assertTags = (body: Record<string, unknown>) => {
+  const tags = body.tags;
+  if (tags === undefined) return;
+  const valid =
+    Array.isArray(tags) &&
+    tags.every((t) => typeof t === "string" && mongoose.isValidObjectId(t));
+  if (!valid) {
+    throw ServerError.error400("Некорректный список тегов");
+  }
+};
+
 export const getProducts = async (req: Request, res: Response) => {
   const params = req.query;
   console.log("request");
@@ -96,6 +120,8 @@ export const createProduct = async (
   try {
     const body = normalizeProductBody(req.body ?? {});
     assertSlugAndSizes(body);
+    assertCategory(body);
+    assertTags(body);
     const doc = await product.create(body);
     return res.status(201).send({ data: doc });
   } catch (err: unknown) {
@@ -132,6 +158,14 @@ export const updateProduct = async (
         slug: body.slug ?? current.slug,
         sizes: body.sizes ?? current.sizes,
       });
+    }
+
+    if ("category" in body) {
+      assertCategory(body);
+    }
+
+    if ("tags" in body) {
+      assertTags(body);
     }
 
     const doc = await product.findByIdAndUpdate(req.params.id, body, {

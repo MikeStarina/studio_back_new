@@ -14,6 +14,8 @@ import stockRouter from './routes/stock'
 import aIrouter from './routes/ai-generate';
 import authRouter from './routes/auth';
 import bannersRouter from "./routes/banners";
+import categoriesRouter from "./routes/categories";
+import tagsRouter from "./routes/tags";
 import { errorHandler } from "./middlewares/errors";
 import { requestLogger, errorLogger } from "./middlewares/logger";
 import cors from "cors";
@@ -114,6 +116,8 @@ app.use("/api/promocodes", promocodeRouter);
 app.use("/api/friends", friendsRouter);
 app.use(fileUpload());
 app.use("/api/banners", bannersRouter);
+app.use("/api/categories", categoriesRouter);
+app.use("/api/tags", tagsRouter);
 app.use("/api/uploads", uploadRouter);
 app.use('/api/blog', blogsRouter);
 app.use('/api/dealadd', dealaddrouter);

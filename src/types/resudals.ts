@@ -17,7 +17,7 @@ type TOrderDetailsData =[
     lsleeve_print?: string;
     rsleeve_print?: string;
 
-    category: string;
+    category: string[];
     color: string;
     description: string;
     editor_back_view: string;
