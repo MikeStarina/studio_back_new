@@ -2,9 +2,9 @@ import fetch from "node-fetch";
 import NodeCache from "node-cache";
 import dotenv from "dotenv";
 
-const ENV = dotenv.config();
+dotenv.config();
 
-const YANDEX_ART_OAUTH = ENV.parsed!.YANDEX_ART;
+const YANDEX_ART_OAUTH = process.env.YANDEX_ART ?? "";
 
 const appCache = new NodeCache({ checkperiod: 1 });
 

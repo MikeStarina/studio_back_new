@@ -4,9 +4,10 @@ import { getCdekToken } from "../utils/cdek-token";
 import fetch from "node-fetch";
 import ServerError from "../utils/server-error-class";
 
-const ENV = dotenv.config();
-const CDEK_DELIVERY_POINTS_URL =
-  ENV.parsed!.CDEK_DELIVERY_POINTS_URL.toString();
+dotenv.config();
+const CDEK_DELIVERY_POINTS_URL = (
+  process.env.CDEK_DELIVERY_POINTS_URL ?? ""
+).toString();
 
 export const cdekDeliveryPoints = async (
   req: Request,

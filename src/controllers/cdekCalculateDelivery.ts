@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 import { getCdekToken } from "../utils/cdek-token";
 import fetch from "node-fetch";
 
-const ENV = dotenv.config();
-const CDEK_CALCULATE_DELIVERY = ENV.parsed!.CDEK_CALCULATE_DELIVERY.toString();
+dotenv.config();
+const CDEK_CALCULATE_DELIVERY = (process.env.CDEK_CALCULATE_DELIVERY ?? "").toString();
 
 export const cdekCalculateDelivery = async (
   req: Request,

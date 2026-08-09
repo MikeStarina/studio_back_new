@@ -1,13 +1,12 @@
 import fetch from "node-fetch";
 import NodeCache from "node-cache";
 import dotenv from "dotenv";
-import { isBoolean } from "util";
 
-const ENV = dotenv.config();
+dotenv.config();
 
-const CDEK_AUTH_URL = ENV.parsed!.CDEK_AUTH_URL;
-const CDEK_CLIENT_ID = ENV.parsed!.CDEK_CLIENT_ID;
-const CDEK_CLIENT_SECRET = ENV.parsed!.CDEK_CLIENT_SECRET;
+const CDEK_AUTH_URL = process.env.CDEK_AUTH_URL ?? "";
+const CDEK_CLIENT_ID = process.env.CDEK_CLIENT_ID ?? "";
+const CDEK_CLIENT_SECRET = process.env.CDEK_CLIENT_SECRET ?? "";
 
 const myCache = new NodeCache({ checkperiod: 1 });
 

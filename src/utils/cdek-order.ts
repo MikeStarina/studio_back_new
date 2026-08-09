@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 import fetch from "node-fetch";
 import { getCdekToken } from "./cdek-token";
 
-const ENV = dotenv.config();
-const CDEK_CREATE_ORDER = ENV.parsed!.CDEK_CREATE_ORDER.toString();
+dotenv.config();
+const CDEK_CREATE_ORDER = (process.env.CDEK_CREATE_ORDER ?? "").toString();
 
 export const cdekOrder = async (
   req: Request,

@@ -4,8 +4,8 @@ import ServerError from "../utils/server-error-class";
 import fetch from "node-fetch";
 import { getCdekToken } from "../utils/cdek-token";
 
-const ENV = dotenv.config();
-const CDEK_CITIES_URL = ENV.parsed!.CDEK_CITIES_URL.toString();
+dotenv.config();
+const CDEK_CITIES_URL = (process.env.CDEK_CITIES_URL ?? "").toString();
 
 export const cdekCities = async (
   req: Request,
