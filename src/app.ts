@@ -30,16 +30,15 @@ import bodyParser from "body-parser";
 import dealaddrouter from './routes/deal-add-hook';
 import { FRONTEND_URL } from "./config";
 
-const ENV = dotenv.config();
+dotenv.config();
 
-// const allowedOrigins = [
-//   "https://pnhdstudioapi.ru",
-//   "https://studio.pnhd.ru",
-//   "https://www.studio.pnhd.ru",
-//   "http://localhost:3000",
-//   "http://localhost:1337",
-//   FRONTEND_URL,
-// ];
+const requireEnv = (key: string): string => {
+  const value = process.env[key];
+  if (value === undefined || value === "") {
+    throw new Error(`Missing required env variable: ${key}`);
+  }
+  return value;
+};
 
 const corsOptions = {
   origin: true,
@@ -47,30 +46,10 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-/**
- *   origin: [
-    "https://pnhdstudioapi.ru",
-    "https://studio.pnhd.ru",
-    "https://www.studio.pnhd.ru",
-    "http://127.0.0.1:1337",
-    "http://95.163.236.13:3000",
-    "http://studio.pnhd.ru",
-    "http://95.163.236.13",
-    "http://localhost:3000",
-    "http://localhost:1337",
-    "http://195.210.2.174:443",
-    "https://195.210.2.174:443",
-    "http://195.210.2.174:80",// сервер 1с
-    "http://195.210.2.174:8080", // сервер 1с
-    "https://vishivka.online",// сервер 1с
-    "*"
-  ],
- */
-
-export const PORT = parseInt(ENV.parsed!.PORT);
-export const DBURL = ENV.parsed!.DBURL.toString();
-export const STOCK_TOKEN = ENV.parsed!.STOCK_TOKEN.toString();
-export const YANDEX_CATALOG_ID = ENV.parsed!.YANDEX_CATALOG_ID;
+export const PORT = parseInt(process.env.PORT || "8000", 10);
+export const DBURL = requireEnv("DBURL");
+export const STOCK_TOKEN = requireEnv("STOCK_TOKEN");
+export const YANDEX_CATALOG_ID = process.env.YANDEX_CATALOG_ID || "";
 
 //console.log(DBURL);
 //!Ghjlerwbz1
@@ -90,6 +69,11 @@ mongoose.set("strictQuery", true);
 mongoose.connect(DBURL, { dbName: "studio" });
 
 app.use(requestLogger);
+
+app.get("/health", (_req, res) => {
+  res.status(200).json({ ok: true, frontend: FRONTEND_URL });
+});
+
 (() => clearImage())();
 (async () => {
   try {

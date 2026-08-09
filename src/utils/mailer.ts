@@ -1,9 +1,9 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 
-const ENV = dotenv.config();
-export const MAIL_LOGIN = ENV.parsed!.MAIL_LOGIN.toString();
-export const MAIL_PASS = ENV.parsed!.MAIL_PASS.toString();
+dotenv.config();
+export const MAIL_LOGIN = (process.env.MAIL_LOGIN || "").toString();
+export const MAIL_PASS = (process.env.MAIL_PASS || "").toString();
 
 type TMailData = {
   to: string;

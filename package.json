@@ -8,6 +8,7 @@
     "build": "tsc",
     "dev": "ts-node-dev src/app.ts",
     "start": "ts-node src/app.ts",
+    "start:prod": "node dist/app.js",
     "migrate:photos:dry": "ts-node src/scripts/migrate-product-photos.ts --dry-run",
     "migrate:photos": "ts-node src/scripts/migrate-product-photos.ts",
     "migrate:categories": "ts-node src/scripts/migrate-product-categories.ts",

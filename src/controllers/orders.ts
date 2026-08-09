@@ -103,7 +103,7 @@ export const createOrder = async (
       },
       confirmation: {
         type: "redirect",
-        return_url: "https://studio.pnhd.ru",
+        return_url: process.env.FRONTEND_URL || "https://studio.pnhd.ru",
       },
       receipt: {
         customer: {

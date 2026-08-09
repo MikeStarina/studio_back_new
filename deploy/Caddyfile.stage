@@ -1,0 +1,9 @@
+api-stage.pnhd.ru {
+	reverse_proxy api:8000
+	encode gzip
+}
+
+# Optional: keep old API host during migration (enable when DNS points here)
+# pnhdstudioapi.ru {
+# 	redir https://api.pnhd.ru{uri} permanent
+# }

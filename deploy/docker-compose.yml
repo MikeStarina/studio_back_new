@@ -1,0 +1,35 @@
+services:
+  api:
+    image: ${API_IMAGE}
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      # dotenv in the app reads a file; Compose env_file alone is not enough
+      - ./.env:/app/.env:ro
+    ports:
+      - "127.0.0.1:8000:8000"
+    networks:
+      - studio
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+    networks:
+      - studio
+
+networks:
+  studio:
+
+volumes:
+  caddy_data:
+  caddy_config:

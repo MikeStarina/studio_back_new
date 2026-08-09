@@ -23,6 +23,18 @@ export const JWT_EXPIRES_IN = getEnv("JWT_EXPIRES_IN", "7d");
 
 export const FRONTEND_URL = getEnv("FRONTEND_URL", "http://localhost:3000");
 
+/**
+ * Public base URL of this API (no trailing slash), used in emails/templates
+ * for absolute links to uploads. Examples:
+ *   https://api.pnhd.ru
+ *   https://api-stage.pnhd.ru
+ *   http://localhost:8000
+ */
+export const PUBLIC_API_URL = getEnv(
+  "PUBLIC_API_URL",
+  IS_PRODUCTION ? "https://api.pnhd.ru" : "http://localhost:8000"
+).replace(/\/$/, "");
+
 /** Empty string in .env must not become Domain="" (browsers reject it). */
 const rawCookieDomain = parsed.COOKIE_DOMAIN ?? process.env.COOKIE_DOMAIN;
 export const COOKIE_DOMAIN =
@@ -32,8 +44,8 @@ export const COOKIE_DOMAIN =
 
 /**
  * Cross-site cookies (SameSite=None; Secure) are required when the frontend
- * and API are on different sites (e.g. studio.pnhd.ru → pnhdstudioapi.ru,
- * or localhost → pnhdstudioapi.ru).
+ * and API are on different sites (e.g. studio.pnhd.ru → pnhdstudioapi.ru).
+ * When both use *.pnhd.ru and COOKIE_DOMAIN=.pnhd.ru, set COOKIE_CROSS_SITE=false.
  *
  * Override with COOKIE_CROSS_SITE=true|false. Otherwise: on in production, or
  * when FRONTEND_URL is not localhost.

@@ -1,5 +1,5 @@
 import { IMailOrderdata } from "types/orders";
-
+import { PUBLIC_API_URL } from "../config";
 
 export const orderClientTemplate = (data: IMailOrderdata) => {
   const {
@@ -132,7 +132,7 @@ style="
     }
 
     if (file !== "") {
-      return `https://pnhdstudioapi.ru${file}`;
+      return `${PUBLIC_API_URL}${file}`;
     } else {
       return file;
     }

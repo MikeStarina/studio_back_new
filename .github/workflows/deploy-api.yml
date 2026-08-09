@@ -1,0 +1,165 @@
+name: Deploy API
+
+on:
+  push:
+    branches:
+      - stage
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        type: choice
+        options:
+          - stage
+          - prod
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref_name == 'main' && 'prod' || 'stage') }}
+    env:
+      DEPLOY_ENV: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref_name == 'main' && 'prod' || 'stage') }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve image refs
+        id: meta
+        run: |
+          echo "tag=${DEPLOY_ENV}" >> "$GITHUB_OUTPUT"
+          echo "sha_tag=sha-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          echo "image=cr.yandex/${{ vars.YCR_ID }}/studio-api" >> "$GITHUB_OUTPUT"
+
+      - name: Login to Yandex Container Registry
+        uses: yc-actions/yc-cr-login@v1
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON }}
+
+      - name: Build and push
+        run: |
+          IMAGE="${{ steps.meta.outputs.image }}"
+          docker build \
+            -t "${IMAGE}:${{ steps.meta.outputs.tag }}" \
+            -t "${IMAGE}:${{ steps.meta.outputs.sha_tag }}" \
+            .
+          docker push "${IMAGE}:${{ steps.meta.outputs.tag }}"
+          docker push "${IMAGE}:${{ steps.meta.outputs.sha_tag }}"
+
+      - name: Prepare deploy bundle
+        env:
+          PORT: "8000"
+          NODE_ENV: production
+          DBURL: ${{ vars.DBURL }}
+          JWT_SECRET: ${{ vars.JWT_SECRET }}
+          JWT_EXPIRES_IN: ${{ vars.JWT_EXPIRES_IN }}
+          FRONTEND_URL: ${{ vars.FRONTEND_URL }}
+          COOKIE_DOMAIN: ${{ vars.COOKIE_DOMAIN }}
+          COOKIE_CROSS_SITE: ${{ vars.COOKIE_CROSS_SITE }}
+          PUBLIC_API_URL: ${{ vars.PUBLIC_API_URL }}
+          OTP_TTL_MINUTES: ${{ vars.OTP_TTL_MINUTES }}
+          OTP_MAX_ATTEMPTS: ${{ vars.OTP_MAX_ATTEMPTS }}
+          OTP_RESEND_COOLDOWN_SECONDS: ${{ vars.OTP_RESEND_COOLDOWN_SECONDS }}
+          MAIL_LOGIN: ${{ vars.MAIL_LOGIN }}
+          MAIL_PASS: ${{ vars.MAIL_PASS }}
+          STOCK_TOKEN: ${{ vars.STOCK_TOKEN }}
+          PAYMENT_AUTH: ${{ vars.PAYMENT_AUTH }}
+          CDEK_AUTH_URL: ${{ vars.CDEK_AUTH_URL }}
+          CDEK_CLIENT_ID: ${{ vars.CDEK_CLIENT_ID }}
+          CDEK_CLIENT_SECRET: ${{ vars.CDEK_CLIENT_SECRET }}
+          CDEK_CREATE_ORDER: ${{ vars.CDEK_CREATE_ORDER }}
+          CDEK_CALCULATE_DELIVERY: ${{ vars.CDEK_CALCULATE_DELIVERY }}
+          CDEK_DELIVERY_POINTS_URL: ${{ vars.CDEK_DELIVERY_POINTS_URL }}
+          CDEK_CITIES_URL: ${{ vars.CDEK_CITIES_URL }}
+          YANDEX_CATALOG_ID: ${{ vars.YANDEX_CATALOG_ID }}
+          YANDEX_ART: ${{ vars.YANDEX_ART }}
+          YANDEX_S3_ACCESS_KEY_ID: ${{ vars.YANDEX_S3_ACCESS_KEY_ID }}
+          YANDEX_S3_SECRET_ACCESS_KEY: ${{ vars.YANDEX_S3_SECRET_ACCESS_KEY }}
+          YANDEX_S3_BUCKET: ${{ vars.YANDEX_S3_BUCKET }}
+          YANDEX_S3_ENDPOINT: ${{ vars.YANDEX_S3_ENDPOINT }}
+          YANDEX_S3_REGION: ${{ vars.YANDEX_S3_REGION }}
+          YANDEX_S3_BANNERS_PREFIX: ${{ vars.YANDEX_S3_BANNERS_PREFIX }}
+          YANDEX_S3_BLOG_COVERS_PREFIX: ${{ vars.YANDEX_S3_BLOG_COVERS_PREFIX }}
+          YANDEX_S3_PRODUCT_PHOTOS_PREFIX: ${{ vars.YANDEX_S3_PRODUCT_PHOTOS_PREFIX }}
+          CDN_PUBLIC_URL: ${{ vars.CDN_PUBLIC_URL }}
+          API_IMAGE: ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.tag }}
+          YCR_ID: ${{ vars.YCR_ID }}
+        run: |
+          set -euo pipefail
+          mkdir -p deploy-bundle
+          cp deploy/docker-compose.yml deploy-bundle/docker-compose.yml
+          cp "deploy/Caddyfile.${DEPLOY_ENV}" deploy-bundle/Caddyfile
+          umask 077
+          {
+            echo "PORT=${PORT}"
+            echo "NODE_ENV=${NODE_ENV}"
+            echo "DBURL=${DBURL}"
+            echo "JWT_SECRET=${JWT_SECRET}"
+            echo "JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-7d}"
+            echo "FRONTEND_URL=${FRONTEND_URL}"
+            echo "COOKIE_DOMAIN=${COOKIE_DOMAIN}"
+            echo "COOKIE_CROSS_SITE=${COOKIE_CROSS_SITE:-false}"
+            echo "PUBLIC_API_URL=${PUBLIC_API_URL}"
+            echo "OTP_TTL_MINUTES=${OTP_TTL_MINUTES:-10}"
+            echo "OTP_MAX_ATTEMPTS=${OTP_MAX_ATTEMPTS:-5}"
+            echo "OTP_RESEND_COOLDOWN_SECONDS=${OTP_RESEND_COOLDOWN_SECONDS:-60}"
+            echo "MAIL_LOGIN=${MAIL_LOGIN}"
+            echo "MAIL_PASS=${MAIL_PASS}"
+            echo "STOCK_TOKEN=${STOCK_TOKEN}"
+            echo "PAYMENT_AUTH=${PAYMENT_AUTH}"
+            echo "CDEK_AUTH_URL=${CDEK_AUTH_URL}"
+            echo "CDEK_CLIENT_ID=${CDEK_CLIENT_ID}"
+            echo "CDEK_CLIENT_SECRET=${CDEK_CLIENT_SECRET}"
+            echo "CDEK_CREATE_ORDER=${CDEK_CREATE_ORDER}"
+            echo "CDEK_CALCULATE_DELIVERY=${CDEK_CALCULATE_DELIVERY}"
+            echo "CDEK_DELIVERY_POINTS_URL=${CDEK_DELIVERY_POINTS_URL}"
+            echo "CDEK_CITIES_URL=${CDEK_CITIES_URL}"
+            echo "YANDEX_CATALOG_ID=${YANDEX_CATALOG_ID}"
+            echo "YANDEX_ART=${YANDEX_ART}"
+            echo "YANDEX_S3_ACCESS_KEY_ID=${YANDEX_S3_ACCESS_KEY_ID}"
+            echo "YANDEX_S3_SECRET_ACCESS_KEY=${YANDEX_S3_SECRET_ACCESS_KEY}"
+            echo "YANDEX_S3_BUCKET=${YANDEX_S3_BUCKET}"
+            echo "YANDEX_S3_ENDPOINT=${YANDEX_S3_ENDPOINT:-https://storage.yandexcloud.net}"
+            echo "YANDEX_S3_REGION=${YANDEX_S3_REGION:-ru-central1}"
+            echo "YANDEX_S3_BANNERS_PREFIX=${YANDEX_S3_BANNERS_PREFIX:-banners}"
+            echo "YANDEX_S3_BLOG_COVERS_PREFIX=${YANDEX_S3_BLOG_COVERS_PREFIX:-blog-covers}"
+            echo "YANDEX_S3_PRODUCT_PHOTOS_PREFIX=${YANDEX_S3_PRODUCT_PHOTOS_PREFIX:-products}"
+            echo "CDN_PUBLIC_URL=${CDN_PUBLIC_URL:-https://cdn.pnhd.ru}"
+            echo "API_IMAGE=${API_IMAGE}"
+            echo "YCR_ID=${YCR_ID}"
+          } > deploy-bundle/.env
+
+      - name: Upload deploy bundle to VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ vars.SSH_HOST }}
+          username: ${{ vars.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "deploy-bundle/*"
+          target: "/opt/studio-api"
+          strip_components: 1
+          overwrite: true
+
+      - name: Pull image and restart stack
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          YC_SA_JSON: ${{ secrets.YC_SA_JSON }}
+        with:
+          host: ${{ vars.SSH_HOST }}
+          username: ${{ vars.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          envs: YC_SA_JSON
+          script: |
+            set -euo pipefail
+            cd /opt/studio-api
+            chmod 600 .env
+            printf '%s\n' "$YC_SA_JSON" | docker login --username json_key --password-stdin cr.yandex
+            docker compose pull
+            docker compose up -d --remove-orphans
+            docker compose ps
+            sleep 3
+            curl -fsS "http://127.0.0.1:8000/health" || curl -fsS "http://127.0.0.1:8000/api/health" || true

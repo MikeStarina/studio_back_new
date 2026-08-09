@@ -1,0 +1,8 @@
+api.pnhd.ru {
+	reverse_proxy api:8000
+	encode gzip
+}
+
+pnhdstudioapi.ru {
+	redir https://api.pnhd.ru{uri} permanent
+}
