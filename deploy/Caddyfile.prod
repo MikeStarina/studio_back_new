@@ -3,6 +3,7 @@ api.pnhd.ru {
 	encode gzip
 }
 
-pnhdstudioapi.ru {
-	redir https://api.pnhd.ru{uri} permanent
-}
+# Enable only when DNS for pnhdstudioapi.ru points at this VM:
+# pnhdstudioapi.ru {
+# 	redir https://api.pnhd.ru{uri} permanent
+# }
