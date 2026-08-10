@@ -85,6 +85,25 @@ Lower TTL to 300 before cutover. Do **not** move `api` / `studio` until phase 5.
 4. Smoke test + YooKassa webhooks
 5. Keep Reg.ru read-only / off
 
+## Database migrations
+
+Schema/data changes go only through versioned files in `src/migrations/` (`001_*.ts`, `002_*.ts`, …). Applied ids are stored in Mongo collection `schema_migrations`.
+
+Deploy API runs migrations automatically on the API VM after `compose up` (StoreDoc is not reachable from GitHub Actions):
+
+```bash
+docker compose exec -T api node dist/migrations/cli.js up
+```
+
+Locally (with `DBURL` in `.env`):
+
+```bash
+npm run migrate:status
+npm run migrate:up
+```
+
+Forward-only (`up`). Do not put one-off data changes in `src/scripts/` for new work — add a migration instead.
+
 ## Local image smoke test
 ```bash
 docker build -t studio-api:local .
