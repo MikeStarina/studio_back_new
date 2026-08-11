@@ -16,6 +16,7 @@ import authRouter from './routes/auth';
 import bannersRouter from "./routes/banners";
 import categoriesRouter from "./routes/categories";
 import tagsRouter from "./routes/tags";
+import feedsRouter from "./routes/feeds";
 import { errorHandler } from "./middlewares/errors";
 import { requestLogger, errorLogger } from "./middlewares/logger";
 import cors from "cors";
@@ -92,6 +93,7 @@ app.get("/health", (_req, res) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/shipping", shippingRouter);
+app.use("/api/feeds", feedsRouter);
 app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/payments", paymentRouter);

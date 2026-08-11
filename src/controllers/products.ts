@@ -41,6 +41,9 @@ const normalizeProductBody = (body: Record<string, unknown>) => {
   if (typeof next.slug === "string") {
     next.slug = next.slug.trim();
   }
+  if ("order" in next) {
+    next.order = Number(next.order) || 0;
+  }
   return next;
 };
 
@@ -92,7 +95,9 @@ const assertTags = (body: Record<string, unknown>) => {
 export const getProducts = async (req: Request, res: Response) => {
   const params = req.query;
   console.log("request");
-  const products = await product.find({ ...params });
+  const products = await product
+    .find({ ...params })
+    .sort({ order: 1, createdAt: 1 });
   return res.status(200).send({ data: products });
 };
 
@@ -122,6 +127,9 @@ export const createProduct = async (
     assertSlugAndSizes(body);
     assertCategory(body);
     assertTags(body);
+    if (!("order" in body)) {
+      body.order = 0;
+    }
     const doc = await product.create(body);
     return res.status(201).send({ data: doc });
   } catch (err: unknown) {
