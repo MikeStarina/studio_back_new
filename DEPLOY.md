@@ -104,6 +104,10 @@ npm run migrate:up
 
 Forward-only (`up`). Do not put one-off data changes in `src/scripts/` for new work — add a migration instead.
 
+## Object Storage — prints lifecycle
+
+User print uploads go to prefix `prints/` (`YANDEX_S3_PRINTS_PREFIX`). In the Yandex Object Storage console, enable a **Lifecycle** rule on the bucket: delete objects under `prints/` older than **7 days**.
+
 ## Local image smoke test
 ```bash
 docker build -t studio-api:local .

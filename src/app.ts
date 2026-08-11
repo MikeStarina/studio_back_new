@@ -26,7 +26,6 @@ import dotenv from "dotenv";
 import { errors } from "celebrate";
 import { getCdekToken } from "./utils/cdek-token";
 import { getYandexArtToken } from "./utils/yandex-art-token";
-import clearImage from "./utils/clear-image";
 import bodyParser from "body-parser";
 import dealaddrouter from './routes/deal-add-hook';
 import { FRONTEND_URL } from "./config";
@@ -75,7 +74,6 @@ app.get("/health", (_req, res) => {
   res.status(200).json({ ok: true, frontend: FRONTEND_URL });
 });
 
-(() => clearImage())();
 (async () => {
   try {
     await getCdekToken();
