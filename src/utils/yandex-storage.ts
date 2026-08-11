@@ -24,6 +24,9 @@ const getConfig = () => {
   const productPhotosPrefix = (
     process.env.YANDEX_S3_PRODUCT_PHOTOS_PREFIX ?? "products"
   ).replace(/^\/+|\/+$/g, "");
+  const printsPrefix = (
+    process.env.YANDEX_S3_PRINTS_PREFIX ?? "prints"
+  ).replace(/^\/+|\/+$/g, "");
   const cdnPublicUrl = (
     process.env.CDN_PUBLIC_URL ?? "https://cdn.pnhd.ru"
   ).replace(/\/+$/, "");
@@ -37,6 +40,7 @@ const getConfig = () => {
     bannersPrefix,
     blogCoversPrefix,
     productPhotosPrefix,
+    printsPrefix,
     cdnPublicUrl,
   };
 };
@@ -44,6 +48,7 @@ const getConfig = () => {
 export const getBannersPrefix = () => getConfig().bannersPrefix;
 export const getBlogCoversPrefix = () => getConfig().blogCoversPrefix;
 export const getProductPhotosPrefix = () => getConfig().productPhotosPrefix;
+export const getPrintsPrefix = () => getConfig().printsPrefix;
 
 export const buildCdnUrl = (key: string): string =>
   `${getConfig().cdnPublicUrl}/${key.replace(/^\/+/, "")}`;
@@ -84,6 +89,14 @@ export const uploadBlogCoverObject = async (
 };
 
 export const uploadProductPhotoObject = async (
+  key: string,
+  body: Buffer,
+  contentType: string
+): Promise<string> => {
+  return uploadObject(key, body, contentType);
+};
+
+export const uploadPrintObject = async (
   key: string,
   body: Buffer,
   contentType: string
