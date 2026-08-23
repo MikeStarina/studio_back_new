@@ -110,6 +110,12 @@ style="
     sizes = sizes.substring(0, sizes.length - 2) + ".";
     return sizes;
   };
+  const toAbsoluteUrl = (url: string) => {
+    const trimmed = url.trim();
+    if (!trimmed) return "";
+    if (/^https?:\/\//i.test(trimmed)) return trimmed;
+    return `${PUBLIC_API_URL}${trimmed.startsWith("/") ? trimmed : `/${trimmed}`}`;
+  };
   const getPreview = (item: string) => {
     let preview =
       "";
@@ -119,7 +125,7 @@ style="
         item.indexOf("; Размер")
       );
     }
-    return preview;
+    return toAbsoluteUrl(preview);
   };
   const getPrintFile = (item: string) => {
     let file =
@@ -131,11 +137,7 @@ style="
       );
     }
 
-    if (file !== "") {
-      return `${PUBLIC_API_URL}${file}`;
-    } else {
-      return file;
-    }
+    return toAbsoluteUrl(file);
   };
   const itemTemplate = (
     name: string,
@@ -173,12 +175,12 @@ style="
       style="padding: 0; margin: 0"
     >
       <!--[if mso
-        ]><a href=${frontPrintFile} target="_blank" hidden>
+        ]><a href="${frontPrintFile}" target="_blank" hidden>
           <v:roundrect
             xmlns:v="urn:schemas-microsoft-com:vml"
             xmlns:w="urn:schemas-microsoft-com:office:word"
             esdevVmlButton
-            href=""
+            href="${frontPrintFile}"
             style="
               height: 40px;
               v-text-anchor: middle;
@@ -219,7 +221,7 @@ style="
           mso-hide: all;
         "
         ><a
-          href=${frontPrintFile}
+          href="${frontPrintFile}"
           class="es-button"
           target="_blank"
           style="
@@ -267,12 +269,12 @@ style="
       style="padding: 0; margin: 0"
     >
       <!--[if mso
-        ]><a href=${backPrintFile} target="_blank" hidden>
+        ]><a href="${backPrintFile}" target="_blank" hidden>
           <v:roundrect
             xmlns:v="urn:schemas-microsoft-com:vml"
             xmlns:w="urn:schemas-microsoft-com:office:word"
             esdevVmlButton
-            href=""
+            href="${backPrintFile}"
             style="
               height: 40px;
               v-text-anchor: middle;
@@ -313,7 +315,7 @@ style="
           mso-hide: all;
         "
         ><a
-          href=${backPrintFile}
+          href="${backPrintFile}"
           class="es-button"
           target="_blank"
           style="
@@ -361,12 +363,12 @@ style="
       style="padding: 0; margin: 0"
     >
       <!--[if mso
-        ]><a href=${lsleevePrintFile} target="_blank" hidden>
+        ]><a href="${lsleevePrintFile}" target="_blank" hidden>
           <v:roundrect
             xmlns:v="urn:schemas-microsoft-com:vml"
             xmlns:w="urn:schemas-microsoft-com:office:word"
             esdevVmlButton
-            href=""
+            href="${lsleevePrintFile}"
             style="
               height: 40px;
               v-text-anchor: middle;
@@ -407,7 +409,7 @@ style="
           mso-hide: all;
         "
         ><a
-          href=${lsleevePrintFile}
+          href="${lsleevePrintFile}"
           class="es-button"
           target="_blank"
           style="
@@ -455,12 +457,12 @@ style="
       style="padding: 0; margin: 0"
     >
       <!--[if mso
-        ]><a href=${rsleevePrintFile} target="_blank" hidden>
+        ]><a href="${rsleevePrintFile}" target="_blank" hidden>
           <v:roundrect
             xmlns:v="urn:schemas-microsoft-com:vml"
             xmlns:w="urn:schemas-microsoft-com:office:word"
             esdevVmlButton
-            href=""
+            href="${rsleevePrintFile}"
             style="
               height: 40px;
               v-text-anchor: middle;
@@ -501,7 +503,7 @@ style="
           mso-hide: all;
         "
         ><a
-          href=${rsleevePrintFile}
+          href="${rsleevePrintFile}"
           class="es-button"
           target="_blank"
           style="
@@ -827,7 +829,7 @@ border-spacing: 0px;
 >
   <img
     class="adapt-img"
-    src=${frontPrint}
+    src="${frontPrint}"
     alt=""
     width="125"
     style="
@@ -886,7 +888,7 @@ border-spacing: 0px;
 >
   <img
     class="adapt-img"
-    src=${backPrint}
+    src="${backPrint}"
     alt=""
     width="125"
     style="
@@ -945,7 +947,7 @@ border-spacing: 0px;
 >
   <img
     class="adapt-img"
-    src=${lsleevePrint}
+    src="${lsleevePrint}"
     alt=""
     width="125"
     style="
@@ -1004,7 +1006,7 @@ border-spacing: 0px;
 >
   <img
     class="adapt-img"
-    src=${rsleevePrint}
+    src="${rsleevePrint}"
     alt=""
     width="125"
     style="
