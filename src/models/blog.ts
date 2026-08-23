@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { rewriteLegacyMediaUrl } from "../utils/media-url";
 
 interface IBlog {
   post_id: number;
@@ -57,5 +58,15 @@ const blogSchema = new mongoose.Schema<IBlog>({
     default: true,
   },
 });
+
+const rewriteCover = (_doc: unknown, ret: { cover?: string }) => {
+  if (typeof ret.cover === "string") {
+    ret.cover = rewriteLegacyMediaUrl(ret.cover);
+  }
+  return ret;
+};
+
+blogSchema.set("toJSON", { transform: rewriteCover });
+blogSchema.set("toObject", { transform: rewriteCover });
 
 export default mongoose.model<IBlog>("blog", blogSchema);
