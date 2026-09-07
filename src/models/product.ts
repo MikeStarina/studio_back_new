@@ -29,6 +29,7 @@ interface IProduct {
   editor_rsleeve_view: String;
   sizes: Array<{ name: String; qty: number }>;
   friends: String;
+  internal_id?: String;
   order: Number;
   createdAt?: Date;
   updatedAt?: Date;
@@ -155,11 +156,17 @@ const productSchema = new mongoose.Schema<IProduct>({
   friends: {
     type: String,
   },
+  internal_id: {
+    type: String,
+    trim: true,
+  },
   order: {
     type: Number,
     default: 0,
   },
 }, { timestamps: true });
+
+productSchema.index({ internal_id: 1 });
 
 export default mongoose.model<IProduct>("product", productSchema);
 
