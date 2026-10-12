@@ -1,13 +1,4 @@
 services:
-  mongo:
-    image: mongo:7
-    restart: unless-stopped
-    command: ["mongod", "--wiredTigerCacheSizeGB", "1"]
-    volumes:
-      - mongo_data:/data/db
-    networks:
-      - studio
-
   api:
     image: ${API_IMAGE:-studio-api:prod}
     restart: unless-stopped
@@ -18,8 +9,6 @@ services:
       - ../.env:/app/.env:ro
     ports:
       - "127.0.0.1:8000:8000"
-    depends_on:
-      - mongo
     networks:
       - studio
 
@@ -40,8 +29,9 @@ services:
 
 networks:
   studio:
+    name: studio
+    external: true
 
 volumes:
-  mongo_data:
   caddy_data:
   caddy_config:

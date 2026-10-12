@@ -92,6 +92,7 @@ jobs:
           set -euo pipefail
           mkdir -p deploy-bundle
           cp deploy/docker-compose.yml deploy-bundle/docker-compose.yml
+          cp deploy/docker-compose.db.yml deploy-bundle/docker-compose.db.yml
           cp "deploy/Caddyfile.${DEPLOY_ENV}" deploy-bundle/Caddyfile
           # 644 so appleboy/scp-action (Docker) can read the file; VM step chmods 600
           {
@@ -159,6 +160,7 @@ jobs:
             cd /opt/studio-api
             chmod 600 .env
             printf '%s\n' "$YC_SA_JSON" | docker login --username json_key --password-stdin cr.yandex
+            docker compose -f docker-compose.db.yml up -d
             docker compose pull
             docker compose up -d --remove-orphans
             docker compose ps
