@@ -3,27 +3,20 @@ name: Deploy API
 on:
   push:
     branches:
-      - stage
       - main
   workflow_dispatch:
-    inputs:
-      environment:
-        description: Target environment
-        required: true
-        type: choice
-        options:
-          - stage
-          - prod
 
 permissions:
   contents: read
+  packages: write
 
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref_name == 'main' && 'prod' || 'stage') }}
+    environment: prod
     env:
-      DEPLOY_ENV: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref_name == 'main' && 'prod' || 'stage') }}
+      DEPLOY_ENV: prod
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,12 +26,11 @@ jobs:
         run: |
           echo "tag=${DEPLOY_ENV}" >> "$GITHUB_OUTPUT"
           echo "sha_tag=sha-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
-          echo "image=cr.yandex/${{ vars.YCR_ID }}/studio-api" >> "$GITHUB_OUTPUT"
+          repo=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          echo "image=ghcr.io/${repo}" >> "$GITHUB_OUTPUT"
 
-      - name: Login to Yandex Container Registry
-        uses: yc-actions/yc-cr-login@v1
-        with:
-          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON }}
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
       - name: Build and push
         run: |
@@ -49,6 +41,18 @@ jobs:
             .
           docker push "${IMAGE}:${{ steps.meta.outputs.tag }}"
           docker push "${IMAGE}:${{ steps.meta.outputs.sha_tag }}"
+
+      - name: Make package public
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          name=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+          curl -fsS -X PATCH \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/users/${{ github.repository_owner }}/packages/container/${name}" \
+            -d '{"visibility":"public"}'
 
       - name: Prepare deploy bundle
         env:
@@ -85,13 +89,14 @@ jobs:
           YANDEX_S3_BANNERS_PREFIX: ${{ vars.YANDEX_S3_BANNERS_PREFIX }}
           YANDEX_S3_BLOG_COVERS_PREFIX: ${{ vars.YANDEX_S3_BLOG_COVERS_PREFIX }}
           YANDEX_S3_PRODUCT_PHOTOS_PREFIX: ${{ vars.YANDEX_S3_PRODUCT_PHOTOS_PREFIX }}
+          YANDEX_S3_PRINTS_PREFIX: ${{ vars.YANDEX_S3_PRINTS_PREFIX }}
           CDN_PUBLIC_URL: ${{ vars.CDN_PUBLIC_URL }}
           API_IMAGE: ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.tag }}
-          YCR_ID: ${{ vars.YCR_ID }}
         run: |
           set -euo pipefail
           mkdir -p deploy-bundle
           cp deploy/docker-compose.yml deploy-bundle/docker-compose.yml
+          cp deploy/docker-compose.db.yml deploy-bundle/docker-compose.db.yml
           cp "deploy/Caddyfile.${DEPLOY_ENV}" deploy-bundle/Caddyfile
           # 644 so appleboy/scp-action (Docker) can read the file; VM step chmods 600
           {
@@ -128,9 +133,9 @@ jobs:
             echo "YANDEX_S3_BANNERS_PREFIX=${YANDEX_S3_BANNERS_PREFIX:-banners}"
             echo "YANDEX_S3_BLOG_COVERS_PREFIX=${YANDEX_S3_BLOG_COVERS_PREFIX:-blog-covers}"
             echo "YANDEX_S3_PRODUCT_PHOTOS_PREFIX=${YANDEX_S3_PRODUCT_PHOTOS_PREFIX:-products}"
+            echo "YANDEX_S3_PRINTS_PREFIX=${YANDEX_S3_PRINTS_PREFIX:-prints}"
             echo "CDN_PUBLIC_URL=${CDN_PUBLIC_URL:-https://cdn.pnhd.ru}"
             echo "API_IMAGE=${API_IMAGE}"
-            echo "YCR_ID=${YCR_ID}"
           } > deploy-bundle/.env
           chmod 644 deploy-bundle/.env
 
@@ -147,18 +152,15 @@ jobs:
 
       - name: Pull image and restart stack
         uses: appleboy/ssh-action@v1.2.0
-        env:
-          YC_SA_JSON: ${{ secrets.YC_SA_JSON }}
         with:
           host: ${{ vars.SSH_HOST }}
           username: ${{ vars.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          envs: YC_SA_JSON
           script: |
             set -euo pipefail
             cd /opt/studio-api
             chmod 600 .env
-            printf '%s\n' "$YC_SA_JSON" | docker login --username json_key --password-stdin cr.yandex
+            docker compose -f docker-compose.db.yml up -d
             docker compose pull
             docker compose up -d --remove-orphans
             docker compose ps

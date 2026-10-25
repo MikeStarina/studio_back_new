@@ -1,0 +1,19 @@
+name: studio-db
+
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    command: ["mongod", "--wiredTigerCacheSizeGB", "1"]
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - studio
+
+networks:
+  studio:
+    name: studio
+
+volumes:
+  mongo_data:
+    name: studio-mongo-data

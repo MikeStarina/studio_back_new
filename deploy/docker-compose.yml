@@ -1,6 +1,6 @@
 services:
   api:
-    image: ${API_IMAGE}
+    image: ${API_IMAGE:-studio-api:prod}
     restart: unless-stopped
     env_file:
       - .env
@@ -29,6 +29,8 @@ services:
 
 networks:
   studio:
+    name: studio
+    external: true
 
 volumes:
   caddy_data:
