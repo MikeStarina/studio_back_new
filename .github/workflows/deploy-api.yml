@@ -42,18 +42,6 @@ jobs:
           docker push "${IMAGE}:${{ steps.meta.outputs.tag }}"
           docker push "${IMAGE}:${{ steps.meta.outputs.sha_tag }}"
 
-      - name: Make package public
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          name=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
-          curl -fsS -X PATCH \
-            -H "Authorization: Bearer ${GH_TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/users/${{ github.repository_owner }}/packages/container/${name}" \
-            -d '{"visibility":"public"}'
-
       - name: Prepare deploy bundle
         env:
           PORT: "8000"
