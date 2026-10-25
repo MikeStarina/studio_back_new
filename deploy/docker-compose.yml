@@ -3,10 +3,10 @@ services:
     image: ${API_IMAGE:-studio-api:prod}
     restart: unless-stopped
     env_file:
-      - ../.env
+      - .env
     volumes:
       # dotenv in the app reads a file; Compose env_file alone is not enough
-      - ../.env:/app/.env:ro
+      - ./.env:/app/.env:ro
     ports:
       - "127.0.0.1:8000:8000"
     networks:
