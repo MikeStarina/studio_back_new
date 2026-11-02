@@ -26,6 +26,7 @@ interface IOrderItem {
       back_print?: string;
       lsleeve_print?: string;
       rsleeve_print?: string;
+      prints?: Array<{ file: string; name: string; size: string; format: string; price: number }>;
 
       category: string[];
       color: string;
@@ -155,6 +156,7 @@ interface IMailOrderdata{
       back_print?: string;
       lsleeve_print?: string;
       rsleeve_print?: string;
+      prints?: Array<{ file: string; name: string; size: string; format: string; price: number }>;
 
       category: string[];
       color: string;

@@ -1412,12 +1412,31 @@ style="padding: 0; margin: 0; width: 20px"
 
 `;
   };
+  const freePrintItemTemplate = (
+    name: string,
+    qtyAll: number,
+    sizes: string,
+    index: number,
+    prints: Array<{ file?: string; name?: string; size?: string; format?: string; price?: number }>,
+  ) => {
+    const lines = prints.map((print, printIndex) => {
+      const file = print.file ? `<a href="${print.file}" target="_blank">Файл</a>` : "";
+      return `<p style="margin:0;font-family:arial,helvetica,sans-serif;font-size:14px;line-height:21px;color:#333333;">Принт ${printIndex + 1}: ${print.format || ""} ${print.size || ""}. ${file}</p>`;
+    }).join("");
+    return `<tr><td align="left" style="padding:20px;margin:0;font-family:arial,helvetica,sans-serif;font-size:14px;line-height:21px;color:#333333;">
+      <p style="margin:0 0 8px;font-size:16px;"><b>${index + 1}. ${name}</b></p>
+      <p style="margin:0 0 8px;">Количество: ${qtyAll}. ${sizes}</p>
+      ${lines}
+    </td></tr>`;
+  };
   const setItem = () => {
     let product = "";
     item.forEach((elem: any, index: number) => {
       //console.log(elem.qty);
       let sizes = qtaSizes(elem.qty);
-      if (elem.isForPrinting) {
+      if (elem.isForPrinting && Array.isArray(elem.prints) && elem.prints.length) {
+        product += freePrintItemTemplate(elem.name, elem.qtyAll, sizes, index, elem.prints);
+      } else if (elem.isForPrinting) {
         let frontPrint = getPreview(elem.front_print);
         let backPrint = getPreview(elem.back_print);
         let lsleevePrint = getPreview(elem.lsleeve_print);

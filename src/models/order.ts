@@ -114,6 +114,7 @@ export interface IOrder {
       back_print?: string;
       lsleeve_print?: string;
       rsleeve_print?: string;
+      prints?: Array<{ file: string; name: string; size: string; format: string; price: number }>;
 
       category: string[];
       color: string;
@@ -269,6 +270,13 @@ const orderSchema = new mongoose.Schema<IOrder>({
       back_print: { type: String },
       lsleeve_print: { type: String },
       rsleeve_print: { type: String },
+      prints: [{
+        file: { type: String },
+        name: { type: String },
+        size: { type: String },
+        format: { type: String },
+        price: { type: Number },
+      }],
 
       category: { type: [String] },
       color: { type: String },
