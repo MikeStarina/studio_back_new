@@ -43,7 +43,10 @@ export const getPaymentConfirmation = async (req: Request, res: Response, next: 
 
     let order_details_string = `Имя: ${currentOrder!.owner_name}, Телефон: ${currentOrder!.owner_phone}, Email: ${currentOrder!.owner_email}, Полная стоимость: ${currentOrder!.total_price}, ${currentOrder!.promocode ? 'Промокод ' + currentOrder!.promocode : ''}, ${currentOrder!.promocode ? 'Стоимость со скидкой ' + currentOrder!.discounted_price : ''} `;
     currentOrder!.order_details.forEach((item, index) => {
-      order_details_string = order_details_string + `№${index + 1}: Текстиль: ${item.textile}; Количество: ${item.qtyAll}; Печать: Грудь: ${item.front_print}; Спина: ${item.back_print}; Л.Рукав: ${item.lsleeve_print}; П.Рукав: ${item.rsleeve_print} //`;
+      const printList = Array.isArray(item.prints) && item.prints.length
+        ? item.prints.map((print: { file?: string; size?: string; format?: string }, printIndex: number) => `Принт ${printIndex + 1}: ${print.format || ""} ${print.size || ""}, Файл: ${print.file || ""}`).join("; ")
+        : `Грудь: ${item.front_print}; Спина: ${item.back_print}; Л.Рукав: ${item.lsleeve_print}; П.Рукав: ${item.rsleeve_print}`;
+      order_details_string = order_details_string + `№${index + 1}: Текстиль: ${item.textile}; Количество: ${item.qtyAll}; Печать: ${printList} //`;
     })
 
     const staffMailData = {
